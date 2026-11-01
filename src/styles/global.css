@@ -152,7 +152,7 @@
     @apply font-inter text-[16px] leading-[24px] text-body;
   }
   .base-medium {
-    @apply font-inter-medium text-[16px] leading-[24px] text-foreground;
+    @apply font-inter-medium text-[16px] leading-[24px] text-muted-foreground;
   }
   .base-semibold {
     @apply font-inter-semibold text-[16px] leading-[24px] text-primary;

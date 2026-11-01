@@ -201,7 +201,7 @@ export default function OnboardingScreen({ onComplete }: Props) {
       <View className="flex-row justify-end px-6 pt-2">
         {!isLast ? (
           <Pressable onPress={finish} hitSlop={12}>
-            <Text className="sm-gray">{ONBOARDING_BTN_SKIP}</Text>
+            <Text className="base-medium">{ONBOARDING_BTN_SKIP}</Text>
           </Pressable>
         ) : (
           <View className="h-6" />
