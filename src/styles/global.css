@@ -9,6 +9,7 @@
   --font-inter-medium: "Fredoka-Medium";
   --font-inter-semibold: "Fredoka-SemiBold";
   --font-inter-bold: "Fredoka-Bold";
+  --font-fredoka: "Fredoka-Regular";
 }
 
 /* Light mode defaults — CSS vars resolved at runtime by NativeWind */
@@ -119,36 +120,36 @@
 
   /* ========= TextStyle ========= */
   .xss-normal {
-    @apply text-[12px] leading-[16px] font-normal text-white;
+    @apply font-inter text-[12px] leading-[16px] text-white;
   }
   .xs-normal {
-    @apply text-[12px] leading-[16px] font-normal text-foreground;
+    @apply font-inter text-[12px] leading-[16px] text-foreground;
   }
 
   .sm-normal {
-    @apply text-[14px] leading-[20px] font-normal text-white;
+    @apply font-inter text-[14px] leading-[20px] text-white;
   }
   .sm-normal-gray {
-    @apply text-[14px] leading-[20px] font-normal text-body;
+    @apply font-inter text-[14px] leading-[20px] text-body;
   }
   .sm-normal-primary {
-    @apply text-[14px] leading-[20px] font-normal text-primary;
+    @apply font-inter text-[14px] leading-[20px] text-primary;
   }
   .sm-gray {
-    @apply text-[14px] leading-[20px] font-normal text-muted-foreground;
+    @apply font-inter text-[14px] leading-[20px] text-muted-foreground;
   }
   .sm-medium {
-    @apply text-[14px] leading-[20px] font-medium text-primary;
+    @apply font-inter-medium text-[14px] leading-[20px] text-primary;
   }
   .sm-semibold {
-    @apply text-[14px] leading-[20px] font-semibold text-foreground;
+    @apply font-inter-semibold text-[14px] leading-[20px] text-foreground;
   }
   .sm-bold {
-    @apply text-[14px] leading-[20px] font-bold text-foreground;
+    @apply font-inter-bold text-[14px] leading-[20px] text-foreground;
   }
 
   .base-normal {
-    @apply text-[16px] leading-[24px] font-normal text-body;
+    @apply font-inter text-[16px] leading-[24px] text-body;
   }
   .base-medium {
     @apply font-inter-medium text-[16px] leading-[24px] text-foreground;
@@ -158,7 +159,7 @@
   }
 
   .lg-normal {
-    @apply text-[18px] leading-[26px] font-normal text-foreground;
+    @apply font-inter text-[18px] leading-[26px] text-foreground;
   }
   .lg-medium {
     @apply font-inter-medium text-[18px] leading-[26px] text-heading;
@@ -167,10 +168,10 @@
     @apply font-inter-medium text-[22px] leading-[28px] text-heading;
   }
   .three-xl-medium {
-    @apply font-inter-bold text-[28px] leading-[34px] text-heading;
+    @apply font-inter-medium text-[28px] leading-[34px] text-heading;
   }
   .four-xl-bold {
-    @apply text-4xl font-bold tracking-tight text-white;
+    @apply font-inter-bold text-4xl tracking-tight text-white;
   }
 
   /* ========== Text Hireriky ============= */

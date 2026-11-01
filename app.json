@@ -49,10 +49,10 @@
         "expo-font",
         {
           "fonts": [
-            "./assets/fonts/Inter/Inter-Regular.ttf",
-            "./assets/fonts/Inter/Inter-Medium.ttf",
-            "./assets/fonts/Inter/Inter-SemiBold.ttf",
-            "./assets/fonts/Inter/Inter-Bold.ttf"
+            "./assets/fonts/Fredoka/Fredoka-Regular.ttf",
+            "./assets/fonts/Fredoka/Fredoka-Medium.ttf",
+            "./assets/fonts/Fredoka/Fredoka-SemiBold.ttf",
+            "./assets/fonts/Fredoka/Fredoka-Bold.ttf"
           ]
         }
       ],
@@ -63,7 +63,7 @@
           "organization": "bruskee",
           "project": "cute-cat"
         }
-      ],
+      ]
     ],
     "experiments": {
       "typedRoutes": true,

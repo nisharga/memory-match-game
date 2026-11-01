@@ -1,9 +1,7 @@
-import { SPLASH_TAGLINE, SPLASH_TITLE } from "@/config/appConfig";
 import { colors } from "@/styles/colors";
 import * as SplashScreen from "expo-splash-screen";
-import { FileText } from "lucide-react-native";
 import { useEffect } from "react";
-import { Text } from "react-native";
+import { Image, Text, useWindowDimensions, View } from "react-native";
 import Animated, {
   Easing,
   runOnJS,
@@ -15,11 +13,17 @@ import Animated, {
 
 type Props = { onFinish: () => void };
 
+const PROGRESS_MS = 3000;
+const FADE_MS = 400;
+
 export default function CustomSplashScreen({ onFinish }: Props) {
-  const iconScale = useSharedValue(0.4);
-  const iconOpacity = useSharedValue(0);
+  const { width: screenWidth } = useWindowDimensions();
+  const barWidth = screenWidth - 80; // 40px padding each side
+
+  const iconScale = useSharedValue(0.25);
+  const textY = useSharedValue(48);
   const textOpacity = useSharedValue(0);
-  const textY = useSharedValue(20);
+  const progressWidth = useSharedValue(0);
   const screenOpacity = useSharedValue(1);
 
   useEffect(() => {
@@ -27,15 +31,26 @@ export default function CustomSplashScreen({ onFinish }: Props) {
       SplashScreen.hideAsync().catch(() => {});
     });
 
-    iconScale.value = withTiming(1, { duration: 600, easing: Easing.out(Easing.back(1.3)) });
-    iconOpacity.value = withTiming(1, { duration: 500 });
+    // Logo zoom in with slight bounce
+    iconScale.value = withTiming(1, {
+      duration: 700,
+      easing: Easing.out(Easing.back(1.15)),
+    });
 
-    textOpacity.value = withDelay(450, withTiming(1, { duration: 500 }));
-    textY.value = withDelay(450, withTiming(0, { duration: 500, easing: Easing.out(Easing.ease) }));
+    // Title + subtitle slide up from bottom
+    textY.value = withDelay(400, withTiming(0, { duration: 600, easing: Easing.out(Easing.ease) }));
+    textOpacity.value = withDelay(400, withTiming(1, { duration: 600 }));
 
+    // Progress bar fills over 3 seconds
+    progressWidth.value = withTiming(barWidth, {
+      duration: PROGRESS_MS,
+      easing: Easing.linear,
+    });
+
+    // Fade out then hand off
     screenOpacity.value = withDelay(
-      2400,
-      withTiming(0, { duration: 600 }, (done) => {
+      PROGRESS_MS + 100,
+      withTiming(0, { duration: FADE_MS }, (done) => {
         "worklet";
         if (done) runOnJS(onFinish)();
       }),
@@ -46,7 +61,6 @@ export default function CustomSplashScreen({ onFinish }: Props) {
   }, []);
 
   const iconStyle = useAnimatedStyle(() => ({
-    opacity: iconOpacity.value,
     transform: [{ scale: iconScale.value }],
   }));
 
@@ -55,30 +69,53 @@ export default function CustomSplashScreen({ onFinish }: Props) {
     transform: [{ translateY: textY.value }],
   }));
 
+  const progressStyle = useAnimatedStyle(() => ({
+    width: progressWidth.value,
+  }));
+
   const screenStyle = useAnimatedStyle(() => ({ opacity: screenOpacity.value }));
 
   return (
-    <Animated.View
-      style={[screenStyle, { flex: 1, backgroundColor: colors.primary }]}
-      className="items-center justify-center"
-    >
-      {/* Decorative circles */}
-      <Animated.View className="absolute -top-16 -right-16 h-52 w-52 rounded-full bg-white/10" />
-      <Animated.View className="absolute -bottom-10 -left-10 h-44 w-44 rounded-full bg-white/10" />
+    <Animated.View style={[screenStyle, { flex: 1, backgroundColor: colors.background }]}>
+      {/* Center: logo + text */}
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        {/* Logo zooms in */}
+        <Animated.View style={iconStyle}>
+          <Image
+            source={require("../../../assets/splash-icon.png")}
+            style={{ width: 130, height: 130, resizeMode: "contain" }}
+          />
+        </Animated.View>
 
-      {/* Icon card */}
-      <Animated.View
-        style={iconStyle}
-        className="mb-10 h-32 w-32 items-center justify-center rounded-[32px] bg-white/20"
-      >
-        <FileText size={56} color={colors.white} strokeWidth={1.5} />
-      </Animated.View>
+        {/* Title + subtitle slide up */}
+        <Animated.View style={[textStyle, { alignItems: "center", marginTop: 28 }]}>
+          <Text className="four-xl-bold text-center">Memory Match</Text>
+          <Text className="base-normal mt-2.5 text-center font-inter-semibold">
+            Flip. Remember. Match.
+          </Text>
+        </Animated.View>
+      </View>
 
-      {/* Brand */}
-      <Animated.View style={textStyle} className="items-center gap-3">
-        <Text className="four-xl-bold">{SPLASH_TITLE}</Text>
-        <Text className="sm-normal px-10 text-center">{SPLASH_TAGLINE}</Text>
-      </Animated.View>
+      {/* Bottom: progress bar + tap to continue */}
+      <View style={{ paddingHorizontal: 40, paddingBottom: 52, alignItems: "center", gap: 20 }}>
+        {/* Track */}
+        <View
+          style={{
+            width: barWidth,
+            height: 6,
+            backgroundColor: colors.muted,
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
+          {/* Fill */}
+          <Animated.View
+            style={[progressStyle, { height: 4, backgroundColor: colors.primary, borderRadius: 2 }]}
+          />
+        </View>
+
+        <Text className="sm-gray">Tap to continue</Text>
+      </View>
     </Animated.View>
   );
 }
