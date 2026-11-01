@@ -1,121 +1,159 @@
-import { Animate } from "@/components";
-import { Text } from "react-native";
+import { Animate } from "@/components/common";
+import { colors } from "@/styles/colors";
+import { useRouter } from "expo-router";
+import { Play, Settings } from "lucide-react-native";
+import { useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const Home = () => {
-  return (
-    <SafeAreaView className="flex-1 bg-slate-100">
-      <Text className="font-inter-bold text-6xl text-red-700">Home</Text>
-
-      <Animate type="fade">
-        <Text style={{ fontFamily: "Fredoka-Regular", fontSize: 30 }}>Fade</Text>
-      </Animate>
-
-      <Animate type="fade-up">
-        <Text>Fade Up</Text>
-      </Animate>
-
-      <Animate type="fade-down">
-        <Text>Fade Down</Text>
-      </Animate>
-
-      <Animate type="fade-left">
-        <Text>Fade Left</Text>
-      </Animate>
-
-      <Animate type="fade-right">
-        <Text>Fade Right</Text>
-      </Animate>
-
-      <Animate type="fade-up-right">
-        <Text>Fade Up Right</Text>
-      </Animate>
-
-      <Animate type="fade-up-left">
-        <Text>Fade Up Left</Text>
-      </Animate>
-
-      <Animate type="fade-down-right">
-        <Text>Fade Down Right</Text>
-      </Animate>
-
-      <Animate type="fade-down-left">
-        <Text>Fade Down Left</Text>
-      </Animate>
-
-      <Animate type="flip-up">
-        <Text>Flip Up</Text>
-      </Animate>
-
-      <Animate type="flip-down">
-        <Text>Flip Down</Text>
-      </Animate>
-
-      <Animate type="flip-left">
-        <Text>Flip Left</Text>
-      </Animate>
-
-      <Animate type="flip-right">
-        <Text>Flip Right</Text>
-      </Animate>
-
-      <Animate type="slide-up">
-        <Text>Slide Up</Text>
-      </Animate>
-
-      <Animate type="slide-down">
-        <Text>Slide Down</Text>
-      </Animate>
-
-      <Animate type="slide-left">
-        <Text>Slide Left</Text>
-      </Animate>
-
-      <Animate type="slide-right">
-        <Text>Slide Right</Text>
-      </Animate>
-
-      <Animate type="zoom-in">
-        <Text>Zoom In</Text>
-      </Animate>
-
-      <Animate type="zoom-in-up">
-        <Text>Zoom In Up</Text>
-      </Animate>
-
-      <Animate type="zoom-in-down">
-        <Text>Zoom In Down</Text>
-      </Animate>
-
-      <Animate type="zoom-in-left">
-        <Text>Zoom In Left</Text>
-      </Animate>
-
-      <Animate type="zoom-in-right">
-        <Text>Zoom In Right</Text>
-      </Animate>
-
-      <Animate type="zoom-out">
-        <Text>Zoom Out</Text>
-      </Animate>
-
-      <Animate type="zoom-out-up">
-        <Text>Zoom Out Up</Text>
-      </Animate>
-
-      <Animate type="zoom-out-down">
-        <Text>Zoom Out Down</Text>
-      </Animate>
-
-      <Animate type="zoom-out-left">
-        <Text>Zoom Out Left</Text>
-      </Animate>
-
-      <Animate type="zoom-out-right">
-        <Text>Zoom Out Right</Text>
-      </Animate>
-    </SafeAreaView>
-  );
+type GameStats = {
+  stars: number;
+  bestTime: string;
+  fewestMoves: number;
 };
 
-export default Home;
+export default function HomeScreen() {
+  const router = useRouter();
+  const [stats] = useState<GameStats>({
+    stars: 14,
+    bestTime: "0:38",
+    fewestMoves: 12,
+  });
+
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
+      {/* Header */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingHorizontal: 24,
+          paddingTop: 8,
+        }}
+      >
+        {/* Stars earned */}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+          <Image
+            source={require("../../assets/star.png")}
+            style={{ width: 22, height: 22, resizeMode: "contain" }}
+          />
+          <Text className="lg-medium">{stats.stars}</Text>
+        </View>
+
+        {/* Settings */}
+        <Pressable
+          onPress={() => router.push("/setting")}
+          hitSlop={12}
+          style={{
+            width: 40,
+            height: 40,
+            backgroundColor: colors.surface,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Settings size={20} color={colors.foreground} strokeWidth={1.8} />
+        </Pressable>
+      </View>
+
+      {/* Hero: logo + title */}
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Animate type="fade-down" duration={500} distance={55}>
+          <Image
+            source={require("../../assets/splash-icon.png")}
+            style={{ width: 160, height: 160, resizeMode: "contain" }}
+          />
+        </Animate>
+
+        <Animate
+          type="fade-up"
+          duration={500}
+          delay={150}
+          distance={40}
+          style={{ marginTop: 20, alignItems: "center" }}
+        >
+          <Text className="four-xl-bold text-center">{"Memory\nMatch"}</Text>
+        </Animate>
+      </View>
+
+      {/* Stats + Buttons */}
+      <View style={{ paddingHorizontal: 24, paddingBottom: 36, gap: 14 }}>
+        {/* Stats row */}
+        <Animate type="fade-up" duration={500} delay={220} distance={30}>
+          <View style={{ flexDirection: "row", gap: 12 }}>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: colors.surface,
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: colors.border,
+                padding: 16,
+                gap: 4,
+              }}
+            >
+              <Text className="stat-label">Best Time</Text>
+              <Text className="stat-value">{stats.bestTime}</Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: colors.surface,
+                borderRadius: 16,
+                borderWidth: 1,
+                borderColor: colors.border,
+                padding: 16,
+                gap: 4,
+              }}
+            >
+              <Text className="stat-label">Fewest Moves</Text>
+              <Text className="stat-value">{stats.fewestMoves}</Text>
+            </View>
+          </View>
+        </Animate>
+
+        {/* Play */}
+        <Animate type="fade-up" duration={500} delay={300} distance={30}>
+          <Pressable
+            onPress={() => router.push("/game")}
+            style={{
+              backgroundColor: colors.primary,
+              borderRadius: 18,
+              paddingVertical: 18,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+            }}
+          >
+            <Play
+              size={18}
+              color={colors.primaryForeground}
+              fill={colors.primaryForeground}
+              strokeWidth={0}
+            />
+            <Text className="play-btn-label">Play</Text>
+          </Pressable>
+        </Animate>
+
+        {/* Choose Level */}
+        <Animate type="fade-up" duration={500} delay={360} distance={30}>
+          <Pressable
+            onPress={() => router.push("/choose-level")}
+            style={{
+              backgroundColor: colors.surface,
+              borderRadius: 18,
+              paddingVertical: 16,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text className="base-medium">Choose level</Text>
+          </Pressable>
+        </Animate>
+      </View>
+    </SafeAreaView>
+  );
+}
