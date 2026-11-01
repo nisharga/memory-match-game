@@ -1,8 +1,8 @@
 export const fontFamilyTheme = {
-  regular: "Inter-Regular",
-  medium: "Inter-Medium",
-  semiBold: "Inter-SemiBold",
-  bold: "Inter-Bold",
+  regular: "Fredoka-Regular",
+  medium: "Fredoka-Medium",
+  semiBold: "Fredoka-SemiBold",
+  bold: "Fredoka-Bold",
 };
 
 export const theme = {

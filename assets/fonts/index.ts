@@ -1,6 +1,6 @@
 export const useCustomFonts = {
-  "Inter-Regular": require("../../assets/fonts/Inter/Inter-Regular.ttf"),
-  "Inter-Medium": require("../../assets/fonts/Inter/Inter-Medium.ttf"),
-  "Inter-SemiBold": require("../../assets/fonts/Inter/Inter-SemiBold.ttf"),
-  "Inter-Bold": require("../../assets/fonts/Inter/Inter-Bold.ttf"),
+  "Fredoka-Regular": require("../../assets/fonts/Fredoka/Fredoka-Regular.ttf"),
+  "Fredoka-Medium": require("../../assets/fonts/Fredoka/Fredoka-Medium.ttf"),
+  "Fredoka-Bold": require("../../assets/fonts/Fredoka/Fredoka-Bold.ttf"),
+  "Fredoka-SemiBold": require("../../assets/fonts/Fredoka/Fredoka-SemiBold.ttf"),
 };

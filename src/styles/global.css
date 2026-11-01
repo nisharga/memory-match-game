@@ -5,10 +5,10 @@
 
 /* Fonts: the same in light and dark mode */
 @theme {
-  --font-inter: "Inter-Regular";
-  --font-inter-medium: "Inter-Medium";
-  --font-inter-semibold: "Inter-SemiBold";
-  --font-inter-bold: "Inter-Bold";
+  --font-inter: "Fredoka-Regular";
+  --font-inter-medium: "Fredoka-Medium";
+  --font-inter-semibold: "Fredoka-SemiBold";
+  --font-inter-bold: "Fredoka-Bold";
 }
 
 /* Light mode defaults — CSS vars resolved at runtime by NativeWind */
