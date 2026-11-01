@@ -79,18 +79,17 @@ export const Button: React.FC<ButtonProps> = ({
       return <ActivityIndicator size="small" color="#FFFFFF" />;
     }
     if (typeof children === "string") {
-      return <Text className="text-base font-semibold tracking-wide text-white">{children}</Text>;
+      return <Text className="base-semibold font-inter-bold! text-background!">{children}</Text>;
     }
     return children;
   };
-
   const resolvedGradientColors =
     gradientColors ??
     (isInactive
-      ? (["#C7D2FE", "#C7D2FE"] as const)
+      ? (["#2e6b6a", "#2e6b6a"] as const)
       : isPressed
-        ? (["#3B5BDB", "#7074E8"] as const)
-        : (["#4A6CF7", "#8B8FFF"] as const));
+        ? (["#5fd9b0", "#1fa882"] as const)
+        : (["#7ef0c9", "#2bc49a"] as const));
 
   return (
     <Animated.View
