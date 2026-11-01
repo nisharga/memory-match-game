@@ -13,38 +13,61 @@
 
 /* Light mode defaults — CSS vars resolved at runtime by NativeWind */
 @theme {
-  --color-primary: #4a6cf7;
-  --color-secondary: #f1f2f5;
-  --color-tertiary: #212121;
+  --color-primary: #7ef0c9;
+  --color-secondary: #165253;
+  --color-tertiary: #2bc49a;
 
-  --color-background: #f7f8fa;
-  --color-heading: #1a1f36;
-  --color-body: #6b7280;
-  --color-border: #e6e8ec;
-  --color-divider: #dcdde1;
+  --color-background: #0e3b3c;
+  --color-surface: #165253;
+  --color-overlay: #061e1f;
+  --color-heading: #eafff7;
+  --color-body: #a9dccd;
+  --color-border: #22625f;
+  --color-divider: #22625f;
 
   --color-white: #ffffff;
   --color-black: #000000;
-  --color-success: #4caf50;
-  --color-warning: #f59e0b;
-  --color-purple: #8b8fff;
-  --color-link: #4a6cf7;
+  --color-success: #3ddc84;
+  --color-warning: #ffc94a;
+  --color-purple: #5b5bd6;
+  --color-link: #7ef0c9;
 
-  --color-primary-foreground: #ffffff;
-  --color-primary-gradient-from: #4a6cf7;
-  --color-primary-gradient-to: #6c8cff;
-  --color-secondary-foreground: #1a1f36;
-  --color-foreground: #1a1f36;
-  --color-muted: #073b74;
-  --color-muted-foreground: #6b7280;
-  --color-subtle-foreground: #9aa3af;
-  --color-input: #e6e8ec;
-  --color-ring: #4a6cf7;
-  --color-destructive: #e7000b;
-  --color-accent: #eef2ff;
-  --color-accent-foreground: #1a1f36;
-  --color-popover: #ffffff;
-  --color-popover-foreground: #1a1f36;
+  --color-primary-foreground: #0e3b3c;
+  --color-primary-gradient-from: #7ef0c9;
+  --color-primary-gradient-to: #2bc49a;
+  --color-secondary-foreground: #eafff7;
+  --color-foreground: #eafff7;
+  --color-muted: #2e6b6a;
+  --color-muted-foreground: #a9dccd;
+  --color-subtle-foreground: #8fc2b4;
+  --color-input: #2e6b6a;
+  --color-ring: #7ef0c9;
+  --color-destructive: #ff8a7a;
+  --color-destructive-foreground: #3a0d05;
+  --color-accent: #165253;
+  --color-accent-foreground: #eafff7;
+  --color-popover: #165253;
+  --color-popover-foreground: #eafff7;
+
+  /* Toast backgrounds */
+  --color-success-bg: #0f4d33;
+  --color-warning-bg: #3d2f0a;
+  --color-destructive-bg: #3a2a2a;
+
+  /* Game: cards */
+  --color-card-back: #2bc49a;
+  --color-card-back-border: #7ef0c9;
+  --color-card-face: #fff4d6;
+  --color-card-matched: #d8efe6;
+  --color-star: #ffc94a;
+  --color-star-empty: #2e6b6a;
+
+  /* Game: card picture colors */
+  --color-shape-orange: #ff7b54;
+  --color-shape-indigo: #5b5bd6;
+  --color-shape-gold: #e0a100;
+  --color-shape-pink: #c2378f;
+  --color-shape-blue: #2f8be0;
 }
 
 /* Dark mode overrides — NativeWind maps this to Appearance.getColorScheme() at runtime */

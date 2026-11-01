@@ -7,50 +7,69 @@
 
 export const colors = {
   // Brand
-  primary: "#4a6cf7",
-  secondary: "#f1f2f5",
-  tertiary: "#212121",
+  primary: "#7ef0c9", // mint: main buttons (Play, Next, Resume)
+  primaryForeground: "#0e3b3c", // text/icons on primary buttons
+  secondary: "#165253", // secondary buttons, stat boxes, panels
+  tertiary: "#2bc49a", // face-down card color
 
   // Surface
-  background: "#f7f8fa",
+  background: "#0e3b3c", // main screen background
+  surface: "#165253", // cards, list rows, settings box
+  overlay: "#061e1f", // behind pop-ups (pause, restart, reset)
   white: "#ffffff",
   black: "#000000",
 
   // Text
-  foreground: "#1a1f36",
-  heading: "#1a1f36",
-  body: "#6b7280",
-  mutedForeground: "#6b7280",
-  subtleForeground: "#9aa3af",
+  foreground: "#eafff7",
+  heading: "#eafff7",
+  body: "#a9dccd",
+  mutedForeground: "#a9dccd",
+  subtleForeground: "#8fc2b4", // locked level text
 
   // Borders
-  border: "#e6e8ec",
-  divider: "#dcdde1",
-  input: "#e6e8ec",
+  border: "#22625f",
+  divider: "#22625f",
+  input: "#2e6b6a",
 
   // Semantic
-  success: "#4caf50",
-  warning: "#f59e0b",
-  destructive: "#e7000b",
-  link: "#4a6cf7",
-  purple: "#8b8fff",
-  ring: "#4a6cf7",
+  success: "#3ddc84", // matched card border, "It's a match!"
+  warning: "#ffc94a", // stars, trophy badge, flipped card border
+  destructive: "#ff8a7a", // reset progress, time's up ring
+  destructiveForeground: "#3a0d05", // text on the red reset button
+  link: "#7ef0c9",
+  purple: "#5b5bd6",
+  ring: "#7ef0c9",
 
   // Component tokens
-  accent: "#eef2ff",
-  accentForeground: "#1a1f36",
-  popover: "#ffffff",
-  popoverForeground: "#1a1f36",
-  muted: "#073b74",
+  accent: "#165253",
+  accentForeground: "#eafff7",
+  popover: "#165253", // pop-up box
+  popoverForeground: "#eafff7",
+  muted: "#2e6b6a", // empty stars, inactive dots, toggle off
 
   // Gradients
-  primaryGradientFrom: "#4a6cf7",
-  primaryGradientTo: "#6c8cff",
+  primaryGradientFrom: "#7ef0c9",
+  primaryGradientTo: "#2bc49a",
 
   // toast bg
-  successBg: "#ecfdf5",
-  warningBg: "#fffbeb",
-  destructiveBg: "#fef2f2",
+  successBg: "#0f4d33",
+  warningBg: "#3d2f0a",
+  destructiveBg: "#3a2a2a",
+
+  // Game: cards
+  cardBack: "#2bc49a",
+  cardBackBorder: "#7ef0c9",
+  cardFace: "#fff4d6", // flipped, not matched yet
+  cardMatched: "#d8efe6", // matched pair
+  star: "#ffc94a",
+  starEmpty: "#2e6b6a",
+
+  // Game: card picture colors
+  shapeOrange: "#ff7b54", // circle / heart
+  shapeIndigo: "#5b5bd6", // star
+  shapeGold: "#e0a100", // triangle
+  shapePink: "#c2378f", // square
+  shapeBlue: "#2f8be0", // diamond
 };
 
 export const darkColors = {
