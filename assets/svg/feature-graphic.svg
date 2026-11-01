@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500">
+<rect width="1024" height="500" fill="#0e3b3c"/>
+<text x="70" y="220" font-family="Fredoka, 'DejaVu Sans', sans-serif" font-weight="700" font-size="92" fill="#eafff7">Memory</text>
+<text x="70" y="320" font-family="Fredoka, 'DejaVu Sans', sans-serif" font-weight="700" font-size="92" fill="#7ef0c9">Match</text>
+<text x="74" y="380" font-family="Fredoka, 'DejaVu Sans', sans-serif" font-size="32" fill="#a9dccd">Flip. Remember. Match.</text>
+<rect x="600" y="120" width="96" height="128" rx="14" fill="#fff4d6"/><g transform="translate(620 156) scale(2.33)" fill="#ff7b54"><circle cx="12" cy="12" r="9"/></g><rect x="720" y="120" width="96" height="128" rx="14" fill="#2bc49a" stroke="#7ef0c9" stroke-width="4"/><rect x="840" y="120" width="96" height="128" rx="14" fill="#2bc49a" stroke="#7ef0c9" stroke-width="4"/><rect x="600" y="270" width="96" height="128" rx="14" fill="#2bc49a" stroke="#7ef0c9" stroke-width="4"/><rect x="720" y="270" width="96" height="128" rx="14" fill="#fff4d6"/><g transform="translate(740 306) scale(2.33)" fill="#2f8be0"><path d="M12 2l9 10-9 10-9-10z"/></g><rect x="840" y="270" width="96" height="128" rx="14" fill="#2bc49a" stroke="#7ef0c9" stroke-width="4"/>
+</svg>
