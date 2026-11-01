@@ -1,22 +1,11 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { Text } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Home = () => {
   return (
-    <View>
-      <Text className="sm-bold text-red-600!">Homexxx</Text>
-      <Text className="sm-bold text-red-600!">Homexxx</Text>
-      <Text className="sm-bold text-red-600!">Homexxx</Text>
-      <Text className="sm-bold text-red-600!">Homexxx</Text>
-      <Text className="sm-bold text-red-600!">Homexxx</Text>
-      <Text className="sm-bold text-red-600!">Homexxx</Text>
-      <Text>Home</Text>
-      <Text>Home</Text>
-      <Text>Home</Text>
-      <Text>Home</Text>
-      <Text>Home</Text>
-      <Text>Home</Text>
-    </View>
+    <SafeAreaView className="flex-1 bg-slate-100">
+      <Text className="text-red-700">Home</Text>
+    </SafeAreaView>
   );
 };
 
