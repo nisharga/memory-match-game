@@ -1,0 +1,108 @@
+import { initContextStorage } from "@/context/contextStorage";
+import { checkOnboardingStatus } from "@/features/onboarding/storageOnboarding";
+import { shouldShowOverview, markOverviewSeen } from "@/features/onboarding/SpotLightTourStorage";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+
+export const ENABLE_CUSTOM_SPLASH = true;
+export const ENABLE_ONBOARDING = true;
+export const ENABLE_AUTH = false;
+export const ENABLE_HOME_SPOTLIGHT_TOUR = true;
+
+// ─── Phase ────────────────────────────────────────────────────────────────────
+// loading    → fonts/storage initialising; native splash stays visible
+// splash     → custom animated splash (only when ENABLE_CUSTOM_SPLASH = true)
+// onboarding → first-launch slides (only when ENABLE_ONBOARDING = true)
+// auth       → after login redirect to main screen
+// app        → main Stack; useAuthTarget() redirects to (auth) or (tabs)
+
+export type AppPhase = "loading" | "splash" | "onboarding" | "app";
+
+// ─── Shared: advance past splash ─────────────────────────────────────────────
+
+async function goToNextPhase(setPhase: (p: AppPhase) => void) {
+  if (ENABLE_ONBOARDING) {
+    const done = await checkOnboardingStatus();
+    if (!done) {
+      setPhase("onboarding");
+      return;
+    }
+  }
+  setPhase("app");
+}
+
+// ─── useAppFlow ───────────────────────────────────────────────────────────────
+// Drives the full pre-navigation flow.
+// fontsReady = true once expo-font resolves (loaded or errored).
+
+export function useAppFlow(fontsReady: boolean) {
+  const [phase, setPhase] = useState<AppPhase>("loading");
+
+  // Step 1 — fonts ready → init storage → splash (or skip straight ahead)
+  useEffect(() => {
+    if (!fontsReady) return;
+    async function prepare() {
+      try {
+        await initContextStorage();
+      } catch (e) {
+        console.warn(e);
+      }
+
+      if (ENABLE_CUSTOM_SPLASH) {
+        // Custom splash will call handleSplashFinish when its animation ends
+        setPhase("splash");
+      } else {
+        // No custom splash — dismiss native splash and advance immediately
+        SplashScreen.hideAsync().catch(() => {});
+        await goToNextPhase(setPhase);
+      }
+    }
+    prepare();
+  }, [fontsReady]);
+
+  // Step 2 — custom splash animation done → check onboarding
+  async function handleSplashFinish() {
+    await goToNextPhase(setPhase);
+  }
+
+  // Step 3 — onboarding completed / skipped → hand off to Stack
+  function handleOnboardingComplete() {
+    setPhase("app");
+  }
+
+  return { phase, handleSplashFinish, handleOnboardingComplete };
+}
+
+// ─── useSpotlightTour ─────────────────────────────────────────────────────────
+// Drives home-screen spotlight tour visibility.
+// handleTourDone is called on both complete AND cancel — marks seen so it never
+// auto-shows again.
+
+export function useSpotlightTour() {
+  const [showTour, setShowTour] = useState(false);
+
+  useEffect(() => {
+    if (!ENABLE_HOME_SPOTLIGHT_TOUR) return;
+    shouldShowOverview()
+      .then(setShowTour)
+      .catch(() => {});
+  }, []);
+
+  async function handleTourDone() {
+    setShowTour(false);
+    await markOverviewSeen().catch(() => {});
+  }
+
+  return {
+    showTour: ENABLE_HOME_SPOTLIGHT_TOUR && showTour,
+    handleTourDone,
+  };
+}
+
+// ─── useAuthTarget ────────────────────────────────────────────────────────────
+// Used by app/index.tsx to redirect after the Stack mounts.
+// Returns null while resolving, then the target href.
+
+export function useAuthTarget() {
+  return "/(tabs)" as const;
+}

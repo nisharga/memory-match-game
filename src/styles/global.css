@@ -1,0 +1,198 @@
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+@import "nativewind/theme";
+
+/* Fonts: the same in light and dark mode */
+@theme {
+  --font-inter: "Inter-Regular";
+  --font-inter-medium: "Inter-Medium";
+  --font-inter-semibold: "Inter-SemiBold";
+  --font-inter-bold: "Inter-Bold";
+}
+
+/* Light mode defaults — CSS vars resolved at runtime by NativeWind */
+@theme {
+  --color-primary: #4a6cf7;
+  --color-secondary: #f1f2f5;
+  --color-tertiary: #212121;
+
+  --color-background: #f7f8fa;
+  --color-heading: #1a1f36;
+  --color-body: #6b7280;
+  --color-border: #e6e8ec;
+  --color-divider: #dcdde1;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-success: #4caf50;
+  --color-warning: #f59e0b;
+  --color-purple: #8b8fff;
+  --color-link: #4a6cf7;
+
+  --color-primary-foreground: #ffffff;
+  --color-primary-gradient-from: #4a6cf7;
+  --color-primary-gradient-to: #6c8cff;
+  --color-secondary-foreground: #1a1f36;
+  --color-foreground: #1a1f36;
+  --color-muted: #073b74;
+  --color-muted-foreground: #6b7280;
+  --color-subtle-foreground: #9aa3af;
+  --color-input: #e6e8ec;
+  --color-ring: #4a6cf7;
+  --color-destructive: #e7000b;
+  --color-accent: #eef2ff;
+  --color-accent-foreground: #1a1f36;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1a1f36;
+}
+
+/* Dark mode overrides — NativeWind maps this to Appearance.getColorScheme() at runtime */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #5b7cfa;
+    --color-secondary: #1e2330;
+    --color-tertiary: #e4e6eb;
+
+    --color-background: #0e1117;
+    --color-surface: #161a23;
+    --color-heading: #f5f6fa;
+    --color-body: #a0a8b6;
+    --color-border: #262b37;
+    --color-divider: #2e3442;
+
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-success: #5cc160;
+    --color-warning: #fbbf24;
+    --color-purple: #a3a6ff;
+    --color-link: #7c95ff;
+
+    --color-primary-foreground: #ffffff;
+    --color-primary-gradient-from: #5b7cfa;
+    --color-primary-gradient-to: #7c95ff;
+    --color-secondary-foreground: #f5f6fa;
+    --color-foreground: #f5f6fa;
+    --color-muted: #1e2330;
+    --color-muted-foreground: #a0a8b6;
+    --color-subtle-foreground: #7c8595;
+    --color-input: #2e3442;
+    --color-ring: #7c95ff;
+    --color-destructive: #ff6467;
+    --color-accent: #1f2640;
+    --color-accent-foreground: #f5f6fa;
+    --color-popover: #1b202b;
+    --color-popover-foreground: #f5f6fa;
+  }
+}
+
+@layer utilities {
+  .my-bg {
+    @apply bg-orange-500 dark:bg-blue-500;
+  }
+  .my-text {
+    @apply text-base font-medium;
+  }
+
+  /* ========= TextStyle ========= */
+  .xss-normal {
+    @apply text-[12px] leading-[16px] font-normal text-white;
+  }
+  .xs-normal {
+    @apply text-[12px] leading-[16px] font-normal text-foreground;
+  }
+
+  .sm-normal {
+    @apply text-[14px] leading-[20px] font-normal text-white;
+  }
+  .sm-normal-gray {
+    @apply text-[14px] leading-[20px] font-normal text-body;
+  }
+  .sm-normal-primary {
+    @apply text-[14px] leading-[20px] font-normal text-primary;
+  }
+  .sm-gray {
+    @apply text-[14px] leading-[20px] font-normal text-muted-foreground;
+  }
+  .sm-medium {
+    @apply text-[14px] leading-[20px] font-medium text-primary;
+  }
+  .sm-semibold {
+    @apply text-[14px] leading-[20px] font-semibold text-foreground;
+  }
+  .sm-bold {
+    @apply text-[14px] leading-[20px] font-bold text-foreground;
+  }
+
+  .base-normal {
+    @apply text-[16px] leading-[24px] font-normal text-body;
+  }
+  .base-medium {
+    @apply font-inter-medium text-[16px] leading-[24px] text-foreground;
+  }
+  .base-semibold {
+    @apply font-inter-semibold text-[16px] leading-[24px] text-primary;
+  }
+
+  .lg-normal {
+    @apply text-[18px] leading-[26px] font-normal text-foreground;
+  }
+  .lg-medium {
+    @apply font-inter-medium text-[18px] leading-[26px] text-heading;
+  }
+  .two-xl-medium {
+    @apply font-inter-medium text-[22px] leading-[28px] text-heading;
+  }
+  .three-xl-medium {
+    @apply font-inter-bold text-[28px] leading-[34px] text-heading;
+  }
+  .four-xl-bold {
+    @apply text-4xl font-bold tracking-tight text-white;
+  }
+
+  /* ========== Text Hireriky ============= */
+
+  .label-text {
+    @apply text-base font-semibold text-muted-foreground;
+  }
+
+  .header-title {
+    @apply font-inter-semibold text-[17px] text-gray-900;
+  }
+  .overline {
+    @apply font-inter-bold text-xs tracking-widest text-sky-500 uppercase;
+  }
+  .large-title {
+    @apply font-inter-bold text-[34px] leading-[41px] text-gray-900;
+  }
+  .section-title {
+    @apply font-inter-bold text-[22px] leading-7 text-gray-900;
+  }
+  .card-title {
+    @apply font-inter-semibold text-[17px] text-gray-900;
+  }
+  .body {
+    @apply font-inter text-base leading-6 text-gray-500;
+  }
+  .small {
+    @apply font-inter text-sm text-gray-500;
+  }
+  .meta {
+    @apply font-inter text-[13px] text-gray-400;
+  }
+  .caption {
+    @apply font-inter text-xs text-gray-400;
+  }
+  .link {
+    @apply font-inter-medium text-[15px] text-blue-500;
+  }
+  .btn-label {
+    @apply font-inter-semibold text-[17px] text-white;
+  }
+  .tab-label {
+    @apply font-inter-medium text-[11px] text-gray-400;
+  }
+  .tab-label-active {
+    @apply font-inter-medium text-[11px] text-violet-500;
+  }
+}
