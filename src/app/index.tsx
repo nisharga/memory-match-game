@@ -45,10 +45,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Settings */}
-        <IconButton
-          className="flex h-12 w-12 flex-row items-center justify-center rounded-xl bg-[#165253]"
-          onPress={() => router.push("/setting")}
-        >
+        <IconButton onPress={() => router.push("/setting")}>
           <Settings size={20} color={colors.foreground} strokeWidth={1.8} />
         </IconButton>
       </View>

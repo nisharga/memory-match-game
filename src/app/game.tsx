@@ -1,4 +1,4 @@
-import { AppModal } from "@/components/common";
+import { Animate, AppModal } from "@/components/common";
 import {
   GameGrid,
   GameHeader,
@@ -62,28 +62,34 @@ export default function GameScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
-      <GameHeader
-        title={GAME.level}
-        onPause={() => setPausedModal(true)}
-        onRestart={() => setRestartModal(true)}
-      />
+      <Animate type="fade-up" duration={500} distance={55} className="mb-2">
+        <GameHeader
+          title={GAME.level}
+          onPause={() => setPausedModal(true)}
+          onRestart={() => setRestartModal(true)}
+        />
+      </Animate>
 
-      <GameStats
-        timeLeft={GAME.timeLeft}
-        moves={GAME.moves}
-        pairsFound={GAME.pairsFound}
-        totalPairs={GAME.totalPairs}
-      />
+      <Animate type="fade-up" duration={500} distance={55} className="mb-2">
+        <GameStats
+          timeLeft={GAME.timeLeft}
+          moves={GAME.moves}
+          pairsFound={GAME.pairsFound}
+          totalPairs={GAME.totalPairs}
+        />
+      </Animate>
 
-      <GameProgressBar progress={progress} />
+      <Animate type="fade-up" duration={500} distance={55} className="mb-2">
+        <GameProgressBar progress={progress} />
+      </Animate>
 
-      <View style={{ flex: 1 }}>
+      <Animate type="zoom-in-up" duration={500} distance={55} className="mb-2">
         <GameGrid
           cards={CARDS}
           columns={GAME.columns}
           onCardPress={(id) => console.log("[Game] Card pressed:", id)}
         />
-      </View>
+      </Animate>
 
       <GameStatusMessage message={GAME.statusMessage} />
 

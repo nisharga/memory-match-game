@@ -28,10 +28,7 @@ export default function ScreenHeader({
     return (
       <Animate type="fade-down" duration={400} distance={30}>
         <View className={`flex-row items-center gap-3 px-4 pt-2 pb-2 ${className}`}>
-          <IconButton
-            className="flex h-12 w-12 flex-row items-center justify-center rounded-xl bg-[#165253]"
-            onPress={onPress}
-          >
+          <IconButton onPress={onPress}>
             <ChevronLeft size={26} color={colors.foreground} strokeWidth={2} />
           </IconButton>
           <Text className="three-xl-medium flex-1">{title}</Text>
