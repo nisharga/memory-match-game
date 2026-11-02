@@ -11,7 +11,6 @@ import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
 import { Pause, RefreshCw } from "lucide-react-native";
 import { useState } from "react";
-import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // ─── Static mock data (replace with real game state later) ────────────────────

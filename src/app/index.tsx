@@ -96,7 +96,10 @@ export default function HomeScreen() {
 
         {/* Choose Level */}
         <Animate type="fade-up" duration={500} delay={360} distance={30}>
-          <Button onPress={() => router.push("/game")} className="gap-10 rounded-2xl bg-[#165253]">
+          <Button
+            onPress={() => router.push("/choose-level")}
+            className="gap-10 rounded-2xl bg-[#165253]"
+          >
             <Text className="base-medium">Choose level</Text>
           </Button>
         </Animate>
