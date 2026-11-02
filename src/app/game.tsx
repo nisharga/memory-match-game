@@ -52,7 +52,7 @@ export default function GameScreen() {
 
   // ── Start game on mount (default: medium) ───────────────────────────────
   useEffect(() => {
-    dispatch(startGame("medium"));
+    dispatch(startGame("easy"));
   }, []);
 
   // ── Countdown timer ──────────────────────────────────────────────────────

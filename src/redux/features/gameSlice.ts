@@ -10,12 +10,19 @@ export type GameStatus = "idle" | "playing" | "checking" | "won" | "lost";
 
 export const LEVEL_CONFIG: Record<
   GameLevel,
-  { label: string; columns: number; rows: number; totalPairs: number; totalSeconds: number }
+  {
+    label: string;
+    columns: number;
+    rows: number;
+    totalPairs: number;
+    totalSeconds: number;
+    maxMoves?: number;
+  }
 > = {
-  easy: { label: "Easy", columns: 3, rows: 4, totalPairs: 6, totalSeconds: 30 },
-  medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 40 },
-  hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 50 },
-  expert: { label: "Expert", columns: 4, rows: 6, totalPairs: 12, totalSeconds: 60 },
+  easy: { label: "Easy", columns: 3, rows: 4, totalPairs: 6, totalSeconds: 30, maxMoves: 12 },
+  medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 75 },
+  hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 90 },
+  expert: { label: "Expert", columns: 4, rows: 6, totalPairs: 12, totalSeconds: 100 },
 };
 
 // ─── Card types ───────────────────────────────────────────────────────────────
@@ -72,6 +79,7 @@ interface GameState {
   columns: number;
   totalPairs: number;
   totalSeconds: number;
+  maxMoves: number | undefined;
   timeLeft: number;
   moves: number;
   pairsFound: number;
@@ -83,9 +91,10 @@ interface GameState {
 
 const initialState: GameState = {
   level: "easy",
-  columns: 4,
-  totalPairs: 8,
+  columns: 3,
+  totalPairs: 6,
   totalSeconds: 30,
+  maxMoves: 12,
   timeLeft: 30,
   moves: 0,
   pairsFound: 0,
@@ -107,6 +116,7 @@ const gameSlice = createSlice({
       state.columns = cfg.columns;
       state.totalPairs = cfg.totalPairs;
       state.totalSeconds = cfg.totalSeconds;
+      state.maxMoves = cfg.maxMoves;
       state.timeLeft = cfg.totalSeconds;
       state.moves = 0;
       state.pairsFound = 0;
@@ -116,7 +126,7 @@ const gameSlice = createSlice({
       state.status = "playing";
     },
 
-    // Every card press → +1 move. Board locks after 2 cards are face-up.
+    // Every card press → +1 move. Exceeding maxMoves ends the game.
     flipCard(state, action: PayloadAction<number>) {
       if (state.isLocked) return;
       if (state.status !== "playing") return;
@@ -124,6 +134,12 @@ const gameSlice = createSlice({
       const card = state.cards.find((c) => c.id === action.payload);
       if (!card || card.state !== "hidden") return;
       if (state.flippedIds.length >= 2) return;
+
+      // 13th press on Easy (maxMoves = 12) → game over
+      if (state.maxMoves !== undefined && state.moves >= state.maxMoves) {
+        state.status = "lost";
+        return;
+      }
 
       card.state = "flipped";
       state.flippedIds.push(action.payload);
@@ -175,6 +191,7 @@ const gameSlice = createSlice({
     resetGame(state) {
       const cfg = LEVEL_CONFIG[state.level];
       state.timeLeft = cfg.totalSeconds;
+      state.maxMoves = cfg.maxMoves;
       state.moves = 0;
       state.pairsFound = 0;
       state.cards = generateCards(cfg.totalPairs);
