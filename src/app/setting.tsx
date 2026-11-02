@@ -99,7 +99,7 @@ export default function SettingScreen() {
   }
 
   async function handleResetAll() {
-    await GameStorage.resetAll();
+    await Promise.all([GameStorage.resetAll(), SettingsStorage.resetAll()]);
     setResetModal(false);
   }
 
@@ -162,9 +162,9 @@ export default function SettingScreen() {
           <ModalInfoList
             subtitle="This can't be undone. You will lose:"
             items={[
-              { label: "Stars earned", value: "All" },
-              { label: "Best times and moves", value: "All" },
-              { label: "Unlocked levels", value: "All" },
+              { label: "Settings", value: "All" },
+              { label: "Best Time", value: "All" },
+              { label: "Fewest moves", value: "All" },
             ]}
           />
         }

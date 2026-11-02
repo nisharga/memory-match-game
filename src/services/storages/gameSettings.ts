@@ -69,6 +69,10 @@ async function getAll(): Promise<GameSettings> {
   return { soundEffects, music, vibration, cardPicture };
 }
 
+async function resetAll(): Promise<void> {
+  await AsyncStorage.multiRemove(Object.values(KEYS));
+}
+
 export const SettingsStorage = {
   getSoundEffects,
   setSoundEffects,
@@ -79,4 +83,5 @@ export const SettingsStorage = {
   getCardPicture,
   setCardPicture,
   getAll,
+  resetAll,
 };
