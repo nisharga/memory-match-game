@@ -7,6 +7,7 @@ import {
   GameStatusMessage,
 } from "@/components/game";
 import { useBackgroundMusic } from "@/hooks";
+import { GameStorage } from "@/services/storages";
 import {
   flipCard,
   matchCards,
@@ -50,9 +51,9 @@ export default function GameScreen() {
 
   useBackgroundMusic("game");
 
-  // ── Start game on mount (default: medium) ───────────────────────────────
+  // ── Start game using the level saved in choose-level screen ────────────
   useEffect(() => {
-    dispatch(startGame("easy"));
+    GameStorage.getSelectedLevel().then((level) => dispatch(startGame(level)));
   }, []);
 
   // ── Countdown timer ──────────────────────────────────────────────────────

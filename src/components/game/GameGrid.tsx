@@ -23,6 +23,7 @@ export default function GameGrid({ cards, columns = 4, onCardPress }: GameGridPr
 
   return (
     <FlatList
+      key={columns}
       data={cards}
       keyExtractor={(item) => String(item.id)}
       numColumns={columns}
