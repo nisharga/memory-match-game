@@ -1,9 +1,12 @@
 import { Animate } from "@/components/common";
+import Confetti from "@/components/ui/Confetti";
 import ResultActions from "@/components/ui/ResultActions";
+import StarRating from "@/components/ui/StarRating";
+import StatBox from "@/components/ui/StatBox";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
 import { Trophy } from "lucide-react-native";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // ─── Mock game result (replace with real params/state later) ─────────────────
@@ -16,104 +19,6 @@ const RESULT = {
   isNewBestTime: true,
   hintText: "Finish in 14 moves or fewer for 3 stars",
 };
-
-// ─── Confetti decoration (static colored pieces) ──────────────────────────────
-
-interface ConfettiPiece {
-  color: string;
-  top: number;
-  left?: number;
-  right?: number;
-  w: number;
-  h: number;
-  r: string;
-}
-
-const CONFETTI: ConfettiPiece[] = [
-  { color: colors.shapeOrange, top: 60, left: 28, w: 16, h: 9, r: "30deg" },
-  { color: colors.shapeIndigo, top: 120, left: 48, w: 10, h: 10, r: "-15deg" },
-  { color: colors.warning, top: 44, left: 90, w: 8, h: 8, r: "0deg" },
-  { color: colors.shapePink, top: 90, left: 145, w: 12, h: 6, r: "50deg" },
-  { color: colors.shapeBlue, top: 135, left: 190, w: 8, h: 8, r: "0deg" },
-  { color: colors.warning, top: 55, right: 32, w: 14, h: 8, r: "-30deg" },
-  { color: colors.shapeOrange, top: 110, right: 55, w: 10, h: 10, r: "20deg" },
-  { color: colors.success, top: 80, right: 95, w: 8, h: 12, r: "-45deg" },
-  { color: colors.shapePink, top: 40, right: 130, w: 10, h: 6, r: "60deg" },
-  { color: colors.shapeBlue, top: 145, right: 28, w: 7, h: 7, r: "0deg" },
-];
-
-function Confetti() {
-  return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      {CONFETTI.map((p, i) => (
-        <View
-          key={i}
-          style={{
-            position: "absolute",
-            top: p.top,
-            left: p.left,
-            right: p.right,
-            width: p.w,
-            height: p.h,
-            borderRadius: 3,
-            backgroundColor: p.color,
-            transform: [{ rotate: p.r }],
-          }}
-        />
-      ))}
-    </View>
-  );
-}
-
-// ─── Star rating ──────────────────────────────────────────────────────────────
-
-function StarRating({ stars, total = 3 }: { stars: number; total?: number }) {
-  const mid = Math.floor(total / 2);
-  return (
-    <View
-      style={{ flexDirection: "row", gap: 6, justifyContent: "center", alignItems: "flex-end" }}
-    >
-      {Array.from({ length: total }).map((_, i) => {
-        const filled = i < stars;
-        const isMid = i === mid;
-        const size = isMid ? 72 : 52;
-        return (
-          <Animate key={i} type="zoom-in" duration={400} delay={80 + i * 120}>
-            <Image
-              source={
-                filled ? require("../../assets/star.png") : require("../../assets/star-empty.png")
-              }
-              style={{ width: size, height: size, resizeMode: "contain" }}
-            />
-          </Animate>
-        );
-      })}
-    </View>
-  );
-}
-
-// ─── Stat box ─────────────────────────────────────────────────────────────────
-
-function StatBox({ label, value }: { label: string; value: string | number }) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.surface,
-        borderRadius: 16,
-        borderWidth: 1,
-        borderColor: colors.border,
-        paddingVertical: 14,
-        paddingHorizontal: 12,
-        alignItems: "center",
-        gap: 4,
-      }}
-    >
-      <Text className="stat-label">{label}</Text>
-      <Text className="stat-value">{value}</Text>
-    </View>
-  );
-}
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
 
