@@ -1,10 +1,11 @@
+import { Button } from "@/components";
 import { Animate } from "@/components/common";
 import IconButton from "@/components/ui/IconButton";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
 import { Play, Settings } from "lucide-react-native";
 import { useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type GameStats = {
@@ -105,22 +106,13 @@ export default function HomeScreen() {
               <Text className="stat-value">{stats.fewestMoves}</Text>
             </View>
           </View>
+
+          {/* <StatItem label="TIME LEFT" value={timeLeft} /> */}
         </Animate>
 
         {/* Play */}
         <Animate type="fade-up" duration={500} delay={300} distance={30}>
-          <Pressable
-            onPress={() => router.push("/game")}
-            style={{
-              backgroundColor: colors.primary,
-              borderRadius: 18,
-              paddingVertical: 18,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-            }}
-          >
+          <Button onPress={() => router.push("/game")} className="gap-10 rounded-2xl">
             <Play
               size={18}
               color={colors.primaryForeground}
@@ -128,23 +120,14 @@ export default function HomeScreen() {
               strokeWidth={0}
             />
             <Text className="play-btn-label">Play</Text>
-          </Pressable>
+          </Button>
         </Animate>
 
         {/* Choose Level */}
         <Animate type="fade-up" duration={500} delay={360} distance={30}>
-          <Pressable
-            onPress={() => router.push("/choose-level")}
-            style={{
-              backgroundColor: colors.surface,
-              borderRadius: 18,
-              paddingVertical: 16,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
+          <Button onPress={() => router.push("/game")} className="gap-10 rounded-2xl bg-[#165253]">
             <Text className="base-medium">Choose level</Text>
-          </Pressable>
+          </Button>
         </Animate>
       </View>
     </SafeAreaView>
