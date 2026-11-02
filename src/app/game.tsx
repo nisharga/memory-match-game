@@ -8,6 +8,7 @@ import {
   type GameCardData,
 } from "@/components/game";
 import { colors } from "@/styles/colors";
+import { useBackgroundMusic } from "@/hooks";
 import { useRouter } from "expo-router";
 import { Pause, RefreshCw } from "lucide-react-native";
 import { useState } from "react";
@@ -56,6 +57,8 @@ export default function GameScreen() {
   const router = useRouter();
   const [pausedModal, setPausedModal] = useState(false);
   const [restartModal, setRestartModal] = useState(false);
+
+  useBackgroundMusic("game");
 
   const progress = 1 - GAME.elapsedSeconds / GAME.totalSeconds;
 

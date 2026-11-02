@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { useSound } from "@/hooks";
 
 export interface ButtonProps extends Omit<TouchableOpacityProps, "style"> {
   children: React.ReactNode;
@@ -41,6 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   // Lazy initializer prevents "Cannot access ref value during render" lint error
   const [scaleAnim] = useState(() => new Animated.Value(1));
+  const { playSound } = useSound();
 
   const handlePressIn = (e: any) => {
     if (!isInactive) {
@@ -53,6 +55,7 @@ export const Button: React.FC<ButtonProps> = ({
       }).start();
     }
     onPressIn?.(e);
+    playSound("tap");
   };
 
   const handlePressOut = (e: any) => {

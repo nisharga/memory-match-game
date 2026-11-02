@@ -1,3 +1,4 @@
+import { useSound } from "@/hooks";
 import { type ReactNode } from "react";
 import { Pressable, View } from "react-native";
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
@@ -19,6 +20,7 @@ export default function IconButton({
   hitSlop = 8,
   disabled = false,
 }: IconButtonProps) {
+  const { playSound } = useSound();
   const scale = useSharedValue(1);
   const opacity = useSharedValue(1);
 
@@ -33,7 +35,10 @@ export default function IconButton({
       className={`relative items-center justify-center ${disabled ? "opacity-40" : ""} flex h-12 w-12 flex-row items-center justify-center rounded-xl bg-[#165253] ${className}`}
     >
       <Pressable
-        onPress={onPress}
+        onPress={() => {
+          onPress?.();
+          playSound("tap");
+        }}
         disabled={disabled}
         hitSlop={hitSlop}
         onPressIn={() => {
