@@ -218,6 +218,36 @@ export default function SettingScreen() {
             </Text>
           </Pressable>
         </Section>
+
+        {/* Screen links (testing) */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 6,
+            paddingVertical: 8,
+          }}
+        >
+          {[
+            { label: "You Win", onPress: () => router.push("/you-win") },
+            { label: "Time Up", onPress: () => router.push("/time-up") },
+            { label: "Game", onPress: () => router.push("/game") },
+          ].map(({ label, onPress }, i, arr) => (
+            <View key={label} style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+              <Pressable onPress={onPress} hitSlop={8}>
+                <Text className="sm-medium" style={{ color: colors.link }}>
+                  {label}
+                </Text>
+              </Pressable>
+              {i < arr.length - 1 && (
+                <View
+                  style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: colors.muted }}
+                />
+              )}
+            </View>
+          ))}
+        </View>
       </ScrollView>
 
       <ScreenFooter>Settings are saved automatically.</ScreenFooter>

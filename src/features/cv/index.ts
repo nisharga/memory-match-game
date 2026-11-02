@@ -1,6 +1,5 @@
 export { default as CVPage } from "./CVPage";
 export { default as ScaledPage } from "./ScaledPage";
-export { default as LiveFab } from "./LiveFab";
 export { default as PersonalSection } from "./screens/PersonalSection";
 export { default as SummarySection } from "./screens/SummarySection";
 export { default as SkillsSection } from "./screens/SkillsSection";
