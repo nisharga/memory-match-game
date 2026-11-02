@@ -1,7 +1,22 @@
-import { ScreenFooter, ScreenHeader, SettingItem } from "@/components/common";
+import {
+  AppModal,
+  ModalInfoList,
+  ScreenFooter,
+  ScreenHeader,
+  SettingItem,
+} from "@/components/common";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
-import { Layers, Music, Smartphone, Trophy, Volume2 } from "lucide-react-native";
+import {
+  Layers,
+  Music,
+  Pause,
+  RefreshCw,
+  Smartphone,
+  TriangleAlert,
+  Trophy,
+  Volume2,
+} from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -49,6 +64,11 @@ export default function SettingScreen() {
   const [vibrationEnabled, setVibrationEnabled] = useState(true);
   const [cardTheme, setCardTheme] = useState("teal");
 
+  // Modal demo state
+  const [pausedModal, setPausedModal] = useState(false);
+  const [restartModal, setRestartModal] = useState(false);
+  const [resetModal, setResetModal] = useState(false);
+
   function handleSoundToggle(value: boolean) {
     setSoundEnabled(value);
     console.log("[Settings] Sound effects:", value);
@@ -71,7 +91,7 @@ export default function SettingScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
-      {/* Header — back button + title built into align="left" */}
+      {/* Header */}
       <ScreenHeader title="Settings" align="left" onPress={() => router.back()} />
 
       <ScrollView
@@ -141,10 +161,7 @@ export default function SettingScreen() {
                   <Pressable
                     key={theme.id}
                     onPress={() => handleCardTheme(theme.id)}
-                    style={{
-                      alignItems: "center",
-                      gap: 6,
-                    }}
+                    style={{ alignItems: "center", gap: 6 }}
                   >
                     <View
                       style={{
@@ -163,9 +180,145 @@ export default function SettingScreen() {
             }
           />
         </Section>
+
+        {/* Modal demo — remove after testing */}
+        <Section label="Modal demo (remove later)">
+          <Pressable
+            onPress={() => setPausedModal(true)}
+            style={{
+              paddingVertical: 16,
+              paddingHorizontal: 18,
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+            }}
+          >
+            <Text className="base-semibold" style={{ color: colors.foreground }}>
+              Paused modal
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setRestartModal(true)}
+            style={{
+              paddingVertical: 16,
+              paddingHorizontal: 18,
+              borderBottomWidth: 1,
+              borderBottomColor: colors.border,
+            }}
+          >
+            <Text className="base-semibold" style={{ color: colors.foreground }}>
+              Restart modal
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setResetModal(true)}
+            style={{ paddingVertical: 16, paddingHorizontal: 18 }}
+          >
+            <Text className="base-semibold" style={{ color: colors.destructive }}>
+              Reset modal
+            </Text>
+          </Pressable>
+        </Section>
       </ScrollView>
 
       <ScreenFooter>Settings are saved automatically.</ScreenFooter>
+
+      {/* ── Paused modal ── */}
+      <AppModal
+        visible={pausedModal}
+        icon={<Pause size={22} color={colors.primary} />}
+        iconBg={colors.background}
+        title="Paused"
+        content="Medium · 0:41 left · 3 of 8 pairs"
+        buttons={[
+          {
+            label: "Resume",
+            variant: "primary",
+            onPress: () => {
+              console.log("[Modal] Resume");
+              setPausedModal(false);
+            },
+          },
+          {
+            label: "Restart level",
+            onPress: () => {
+              console.log("[Modal] Restart level");
+              setPausedModal(false);
+            },
+          },
+          {
+            label: "Quit to home",
+            onPress: () => {
+              console.log("[Modal] Quit to home");
+              setPausedModal(false);
+              router.replace("/");
+            },
+          },
+        ]}
+        onRequestClose={() => setPausedModal(false)}
+      />
+
+      {/* ── Restart modal ── */}
+      <AppModal
+        visible={restartModal}
+        icon={<RefreshCw size={22} color={colors.primary} />}
+        iconBg={colors.background}
+        title="Restart this game?"
+        content="The cards will be shuffled again. Your 3 matched pairs and 14 moves will be cleared."
+        buttons={[
+          {
+            label: "Yes, restart",
+            variant: "primary",
+            onPress: () => {
+              console.log("[Modal] Yes restart");
+              setRestartModal(false);
+            },
+          },
+          {
+            label: "Keep playing",
+            onPress: () => {
+              console.log("[Modal] Keep playing");
+              setRestartModal(false);
+            },
+          },
+        ]}
+        onRequestClose={() => setRestartModal(false)}
+      />
+
+      {/* ── Reset all progress modal ── */}
+      <AppModal
+        visible={resetModal}
+        icon={<TriangleAlert size={22} color={colors.destructive} />}
+        iconBg={colors.destructiveBg}
+        title="Reset all progress?"
+        content={
+          <ModalInfoList
+            subtitle="This can't be undone. You will lose:"
+            items={[
+              { label: "Stars earned", value: 14 },
+              { label: "Levels unlocked", value: 3 },
+              { label: "Best times and moves", value: "All" },
+            ]}
+          />
+        }
+        buttons={[
+          {
+            label: "Reset everything",
+            variant: "destructive",
+            onPress: () => {
+              console.log("[Modal] Reset everything");
+              setResetModal(false);
+            },
+          },
+          {
+            label: "Cancel",
+            onPress: () => {
+              console.log("[Modal] Cancel reset");
+              setResetModal(false);
+            },
+          },
+        ]}
+        onRequestClose={() => setResetModal(false)}
+      />
     </SafeAreaView>
   );
 }
