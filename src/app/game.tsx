@@ -71,7 +71,7 @@ export default function GameScreen() {
   // ── Navigate when game ends ──────────────────────────────────────────────
   useEffect(() => {
     if (status === "won") router.replace("/you-win");
-    if (status === "lost") router.replace("/time-up");
+    if (status === "lost") router.replace("/lose");
   }, [status]);
 
   // ── Check match after two cards are flipped ──────────────────────────────

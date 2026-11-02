@@ -35,6 +35,23 @@ export function useBackgroundMusic(track: BgTrack = "game") {
   }, []);
 }
 
+// ─── Result music (plays once, no loop) ──────────────────────────────────────
+// Usage: useResultMusic("win")  /  useResultMusic("lose")
+
+export type ResultTrack = "win" | "lose";
+
+const RESULT_SOURCES: Record<ResultTrack, ReturnType<typeof require>> = {
+  win: require("../../assets/sounds/win.mp3"),
+  lose: require("../../assets/sounds/lose.mp3"),
+};
+
+export function useResultMusic(track: ResultTrack) {
+  const player = useAudioPlayer(RESULT_SOURCES[track] as any);
+  useEffect(() => {
+    player.play();
+  }, []);
+}
+
 // ─── Sound effects ────────────────────────────────────────────────────────────
 // Usage: const { playSound } = useSound();
 //        playSound("tap");      // button press

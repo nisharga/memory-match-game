@@ -19,9 +19,10 @@ export const LEVEL_CONFIG: Record<
     maxMoves?: number;
   }
 > = {
-  easy: { label: "Easy", columns: 3, rows: 4, totalPairs: 6, totalSeconds: 30, maxMoves: 12 },
-  medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 75 },
-  hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 90 },
+  easy: { label: "Easy", columns: 3, rows: 4, totalPairs: 6, totalSeconds: 40, maxMoves: 30 },
+  medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 75, maxMoves: 32 },
+  hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 90, maxMoves: 36 },
+  expert: { label: "Expert", columns: 4, rows: 6, totalPairs: 12, totalSeconds: 100 },
 };
 
 // ─── Card types ───────────────────────────────────────────────────────────────
@@ -221,3 +222,16 @@ export const selectTimeFormatted = (s: RootState) => {
 // 1 → full, 0 → empty (remaining time fraction)
 export const selectProgress = (s: RootState) =>
   s.game.totalSeconds > 0 ? s.game.timeLeft / s.game.totalSeconds : 0;
+
+// Stars earned on win (based on time remaining)
+export const selectStarsEarned = (s: RootState): number => {
+  const { timeLeft, totalSeconds } = s.game;
+  const frac = totalSeconds > 0 ? timeLeft / totalSeconds : 0;
+  if (frac >= 0.5) return 3;
+  if (frac >= 0.2) return 2;
+  return 1;
+};
+
+// Why the player lost: "time" or "moves"
+export const selectLoseReason = (s: RootState): "time" | "moves" =>
+  s.game.timeLeft === 0 ? "time" : "moves";
