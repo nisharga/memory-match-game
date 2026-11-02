@@ -4,6 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import apiSlice from "./api-queries/api-slice";
 import authReducer from "./features/authSlice";
 import cvReducer from "./features/cvSlice";
+import gameReducer from "./features/gameSlice";
 import { saveCV } from "@/utils/cvStorage";
 
 // Persist CV data on every cv/* action (legacy key + multi-CV store)
@@ -22,6 +23,7 @@ export const store = configureStore({
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authReducer,
     cv: cvReducer,
+    game: gameReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

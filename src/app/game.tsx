@@ -5,68 +5,112 @@ import {
   GameProgressBar,
   GameStats,
   GameStatusMessage,
-  type GameCardData,
 } from "@/components/game";
-import { colors } from "@/styles/colors";
 import { useBackgroundMusic } from "@/hooks";
+import {
+  flipCard,
+  matchCards,
+  resetFlipped,
+  resetGame,
+  selectCards,
+  selectFlippedIds,
+  selectGame,
+  selectGameStatus,
+  selectProgress,
+  selectTimeFormatted,
+  startGame,
+  tick,
+} from "@/redux/features/gameSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useRouter } from "expo-router";
 import { Pause, RefreshCw } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { colors } from "@/styles/colors";
 
-// ─── Static mock data (replace with real game state later) ────────────────────
-
-const GAME = {
-  level: "Medium",
-  timeLeft: "0:41",
-  totalSeconds: 75,
-  elapsedSeconds: 34,
-  moves: 14,
-  pairsFound: 3,
-  totalPairs: 8,
-  columns: 4,
-  statusMessage: "Not a match. Try again!",
-};
-
-const CARDS: GameCardData[] = [
-  // Row 1
-  { id: 1, shape: "circle", shapeColor: colors.shapeOrange, state: "hidden" },
-  { id: 2, shape: "circle", shapeColor: colors.shapeOrange, state: "flipped" },
-  { id: 3, shape: "star", shapeColor: colors.shapeIndigo, state: "hidden" },
-  { id: 4, shape: "star", shapeColor: colors.shapeIndigo, state: "flipped" },
-  // Row 2
-  { id: 5, shape: "triangle", shapeColor: colors.shapeGold, state: "matched" },
-  { id: 6, shape: "diamond", shapeColor: colors.shapeBlue, state: "hidden" },
-  { id: 7, shape: "triangle", shapeColor: colors.shapeGold, state: "matched" },
-  { id: 8, shape: "star", shapeColor: colors.shapeIndigo, state: "flipped" },
-  // Row 3
-  { id: 9, shape: "triangle", shapeColor: colors.shapeOrange, state: "flipped" },
-  { id: 10, shape: "square", shapeColor: colors.shapePink, state: "hidden" },
-  { id: 11, shape: "diamond", shapeColor: colors.shapeBlue, state: "hidden" },
-  { id: 12, shape: "square", shapeColor: colors.shapePink, state: "flipped" },
-  // Row 4
-  { id: 13, shape: "circle", shapeColor: colors.shapeOrange, state: "hidden" },
-  { id: 14, shape: "square", shapeColor: colors.shapePink, state: "flipped" },
-  { id: 15, shape: "triangle", shapeColor: colors.shapeOrange, state: "hidden" },
-  { id: 16, shape: "diamond", shapeColor: colors.shapeBlue, state: "flipped" },
-];
-
-// ─── Screen ───────────────────────────────────────────────────────────────────
+const MATCH_DELAY = 700; // ms to show matched pair before locking
+const MISMATCH_DELAY = 900; // ms to show wrong pair before flipping back
 
 export default function GameScreen() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
+  const game = useAppSelector(selectGame);
+  const cards = useAppSelector(selectCards);
+  const flippedIds = useAppSelector(selectFlippedIds);
+  const status = useAppSelector(selectGameStatus);
+  const timeLabel = useAppSelector(selectTimeFormatted);
+  const progress = useAppSelector(selectProgress);
+
   const [pausedModal, setPausedModal] = useState(false);
   const [restartModal, setRestartModal] = useState(false);
 
-  // useBackgroundMusic("game");
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const checkingRef = useRef(false);
 
-  const progress = 1 - GAME.elapsedSeconds / GAME.totalSeconds;
+  useBackgroundMusic("game");
+
+  // ── Start game on mount (default: medium) ───────────────────────────────
+  useEffect(() => {
+    dispatch(startGame("medium"));
+  }, []);
+
+  // ── Countdown timer ──────────────────────────────────────────────────────
+  useEffect(() => {
+    if (status === "playing" || status === "checking") {
+      timerRef.current = setInterval(() => dispatch(tick()), 1000);
+    } else {
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [status]);
+
+  // ── Navigate when game ends ──────────────────────────────────────────────
+  useEffect(() => {
+    if (status === "won") router.replace("/you-win");
+    if (status === "lost") router.replace("/time-up");
+  }, [status]);
+
+  // ── Check match after two cards are flipped ──────────────────────────────
+  useEffect(() => {
+    if (flippedIds.length !== 2 || checkingRef.current) return;
+    checkingRef.current = true;
+
+    const [id1, id2] = flippedIds;
+    const c1 = cards.find((c) => c.id === id1);
+    const c2 = cards.find((c) => c.id === id2);
+    const isMatch = c1 && c2 && c1.pairId === c2.pairId;
+
+    const delay = isMatch ? MATCH_DELAY : MISMATCH_DELAY;
+    const timer = setTimeout(() => {
+      if (isMatch) dispatch(matchCards());
+      else dispatch(resetFlipped());
+      checkingRef.current = false;
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [flippedIds]);
+
+  // ── Derived display values ───────────────────────────────────────────────
+  const statusMessage =
+    status === "checking"
+      ? flippedIds.length === 2 &&
+        (() => {
+          const c1 = cards.find((c) => c.id === flippedIds[0]);
+          const c2 = cards.find((c) => c.id === flippedIds[1]);
+          return c1 && c2 && c1.pairId === c2.pairId;
+        })()
+        ? "It's a match!"
+        : "Not a match. Try again!"
+      : "";
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
       <Animate type="fade-up" duration={500} distance={55} className="mb-2">
         <GameHeader
-          title={GAME.level}
+          title={game.level.charAt(0).toUpperCase() + game.level.slice(1)}
           onPause={() => setPausedModal(true)}
           onRestart={() => setRestartModal(true)}
         />
@@ -74,10 +118,10 @@ export default function GameScreen() {
 
       <Animate type="fade-up" duration={500} distance={55} className="mb-2">
         <GameStats
-          timeLeft={GAME.timeLeft}
-          moves={GAME.moves}
-          pairsFound={GAME.pairsFound}
-          totalPairs={GAME.totalPairs}
+          timeLeft={timeLabel}
+          moves={game.moves}
+          pairsFound={game.pairsFound}
+          totalPairs={game.totalPairs}
         />
       </Animate>
 
@@ -87,13 +131,13 @@ export default function GameScreen() {
 
       <Animate type="zoom-in-up" duration={500} distance={55} className="mb-2">
         <GameGrid
-          cards={CARDS}
-          columns={GAME.columns}
-          onCardPress={(id) => console.log("[Game] Card pressed:", id)}
+          cards={cards}
+          columns={game.columns}
+          onCardPress={(id) => dispatch(flipCard(id))}
         />
       </Animate>
 
-      <GameStatusMessage message={GAME.statusMessage} />
+      <GameStatusMessage message={statusMessage} />
 
       {/* Paused modal */}
       <AppModal
@@ -101,15 +145,12 @@ export default function GameScreen() {
         icon={<Pause size={22} color={colors.primary} />}
         iconBg={colors.background}
         title="Paused"
-        content={`${GAME.level} · ${GAME.timeLeft} left · ${GAME.pairsFound} of ${GAME.totalPairs} pairs`}
+        content={`${game.level} · ${timeLabel} left · ${game.pairsFound} of ${game.totalPairs} pairs`}
         buttons={[
           {
             label: "Resume",
             variant: "primary",
-            onPress: () => {
-              console.log("[Game] Resume");
-              setPausedModal(false);
-            },
+            onPress: () => setPausedModal(false),
           },
           {
             label: "Restart level",
@@ -135,22 +176,19 @@ export default function GameScreen() {
         icon={<RefreshCw size={22} color={colors.primary} />}
         iconBg={colors.background}
         title="Restart this game?"
-        content={`The cards will be shuffled again. Your ${GAME.pairsFound} matched pairs and ${GAME.moves} moves will be cleared.`}
+        content={`The cards will be shuffled again. Your ${game.pairsFound} matched pairs and ${game.moves} moves will be cleared.`}
         buttons={[
           {
             label: "Yes, restart",
             variant: "primary",
             onPress: () => {
-              console.log("[Game] Restart confirmed");
+              dispatch(resetGame());
               setRestartModal(false);
             },
           },
           {
             label: "Keep playing",
-            onPress: () => {
-              console.log("[Game] Keep playing");
-              setRestartModal(false);
-            },
+            onPress: () => setRestartModal(false),
           },
         ]}
         onRequestClose={() => setRestartModal(false)}
