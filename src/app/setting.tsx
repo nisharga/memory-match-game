@@ -1,4 +1,5 @@
-import { AppModal, ModalInfoList } from "@/components/common";
+import { Animate, AppModal, ModalInfoList, ScreenFooter, ScreenHeader } from "@/components/common";
+import { HowToPlayAccordion, SectionLabel } from "@/components/settings";
 import { SettingsStorage, type CardPicture } from "@/services/storages/gameSettings";
 import { GameStorage } from "@/services/storages";
 import { colors } from "@/styles/colors";
@@ -7,16 +8,7 @@ import { ChevronRight, RotateCcw, TriangleAlert } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// ─── Card picture options ─────────────────────────────────────────────────────
-
-const CARD_PICTURES: { id: CardPicture; label: string }[] = [
-  { id: "shapes", label: "Shapes" },
-  { id: "fruits", label: "Fruits" },
-  { id: "animals", label: "Animals" },
-];
-
-// ─── Toggle row ───────────────────────────────────────────────────────────────
+import { Button } from "@/components";
 
 function ToggleRow({
   label,
@@ -52,8 +44,6 @@ function ToggleRow({
   );
 }
 
-// ─── Card ─────────────────────────────────────────────────────────────────────
-
 function Card({ children }: { children: React.ReactNode }) {
   return (
     <View
@@ -70,28 +60,6 @@ function Card({ children }: { children: React.ReactNode }) {
   );
 }
 
-// ─── Section label ────────────────────────────────────────────────────────────
-
-function SectionLabel({ label }: { label: string }) {
-  return (
-    <Text
-      style={{
-        fontSize: 11,
-        fontWeight: "700",
-        letterSpacing: 1.2,
-        color: colors.mutedForeground,
-        textTransform: "uppercase",
-        paddingHorizontal: 4,
-        marginBottom: 6,
-      }}
-    >
-      {label}
-    </Text>
-  );
-}
-
-// ─── Screen ───────────────────────────────────────────────────────────────────
-
 export default function SettingScreen() {
   const router = useRouter();
 
@@ -101,7 +69,6 @@ export default function SettingScreen() {
   const [cardPicture, setCardPictureState] = useState<CardPicture>("shapes");
   const [resetModal, setResetModal] = useState(false);
 
-  // Load persisted settings on mount
   useEffect(() => {
     SettingsStorage.getAll().then((s) => {
       setSoundEffectsState(s.soundEffects);
@@ -138,42 +105,11 @@ export default function SettingScreen() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
-      {/* ── Header ── */}
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 12,
-          paddingHorizontal: 16,
-          paddingVertical: 14,
-        }}
-      >
-        <Pressable
-          onPress={() => router.back()}
-          hitSlop={12}
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 10,
-            backgroundColor: colors.surface,
-            borderWidth: 1,
-            borderColor: colors.border,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <ChevronRight
-            size={20}
-            color={colors.foreground}
-            strokeWidth={2.2}
-            style={{ transform: [{ rotate: "180deg" }] }}
-          />
-        </Pressable>
-        <Text style={{ fontSize: 22, fontWeight: "700", color: colors.heading }}>Settings</Text>
-      </View>
+      {/* Header */}
+      <ScreenHeader title="Settings" align="left" onPress={() => router.back()} />
 
       <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 4, gap: 20, paddingBottom: 32 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 4, gap: 20, paddingBottom: 8 }}
         showsVerticalScrollIndicator={false}
       >
         {/* ── Toggles ── */}
@@ -183,95 +119,35 @@ export default function SettingScreen() {
           <ToggleRow label="Vibration" value={vibration} onChange={handleVibration} isLast />
         </Card>
 
-        {/* ── Card pictures ── */}
-        <View>
-          <SectionLabel label="Card Pictures" />
-          <Card>
-            <View
-              style={{
-                flexDirection: "row",
-                padding: 6,
-                gap: 6,
-              }}
-            >
-              {CARD_PICTURES.map(({ id, label }) => {
-                const selected = cardPicture === id;
-                return (
-                  <Pressable
-                    key={id}
-                    onPress={() => handleCardPicture(id)}
-                    style={{
-                      flex: 1,
-                      paddingVertical: 10,
-                      borderRadius: 10,
-                      alignItems: "center",
-                      backgroundColor: selected ? colors.primary : "transparent",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        fontWeight: "600",
-                        color: selected ? colors.primaryForeground : colors.body,
-                      }}
-                    >
-                      {label}
-                    </Text>
-                  </Pressable>
-                );
-              })}
-            </View>
-          </Card>
-        </View>
-
         {/* ── How to play ── */}
-        <Pressable
-          onPress={() => router.push("/faq" as any)}
-          style={{
-            backgroundColor: colors.surface,
-            borderRadius: 16,
-            borderWidth: 1,
-            borderColor: colors.border,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            paddingHorizontal: 16,
-            paddingVertical: 16,
-          }}
-        >
-          <Text style={{ fontSize: 15, fontWeight: "500", color: colors.foreground }}>
-            How to play
-          </Text>
-          <ChevronRight size={18} color={colors.mutedForeground} strokeWidth={2} />
-        </Pressable>
+        <HowToPlayAccordion />
 
         {/* ── Reset all progress ── */}
-        <Pressable
-          onPress={() => setResetModal(true)}
-          style={{
-            borderRadius: 16,
-            borderWidth: 1.5,
-            borderColor: colors.destructive,
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 10,
-            paddingVertical: 16,
-          }}
-        >
-          <RotateCcw size={17} color={colors.destructive} strokeWidth={2.2} />
-          <Text style={{ fontSize: 15, fontWeight: "600", color: colors.destructive }}>
-            Reset all progress
-          </Text>
-        </Pressable>
+        <Animate type="fade-up" duration={500} delay={360} distance={30}>
+          <Pressable
+            onPress={() => setResetModal(true)}
+            style={{
+              borderRadius: 16,
+              borderWidth: 1.5,
+              borderColor: colors.destructive,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              paddingVertical: 16,
+            }}
+          >
+            <RotateCcw size={17} color={colors.destructive} strokeWidth={2.2} />
+            <Text style={{ fontSize: 15, fontWeight: "600", color: colors.destructive }}>
+              Reset all progress
+            </Text>
+          </Pressable>
+        </Animate>
       </ScrollView>
 
       {/* ── Footer ── */}
-      <View style={{ paddingBottom: 16, alignItems: "center" }}>
-        <Text style={{ fontSize: 13, color: colors.mutedForeground }}>
-          Privacy policy · Version 1.0
-        </Text>
-      </View>
+      <View className="pt-8"></View>
+      <ScreenFooter>Privacy policy · Version 1.0</ScreenFooter>
 
       {/* ── Reset modal ── */}
       <AppModal

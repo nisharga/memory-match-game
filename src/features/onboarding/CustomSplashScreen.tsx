@@ -93,6 +93,9 @@ export default function CustomSplashScreen({ onFinish }: Props) {
           <Text className="base-normal mt-2.5 text-center font-inter-semibold">
             Flip. Remember. Match.
           </Text>
+          <Text className="sm-normal mt-2.5 text-center font-inter-semibold text-body!">
+            By. Nisharga. kabir
+          </Text>
         </Animated.View>
       </View>
 
