@@ -1,8 +1,10 @@
 import { Animate, ScreenFooter, ScreenHeader } from "@/components/common";
+import { StatItem } from "@/components/game";
 import LevelCard from "@/components/ui/LevelCard";
+import { GameStorage, type LevelStats } from "@/services/storages";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -59,6 +61,10 @@ const LEVELS: Level[] = [
   },
 ];
 
+function formatTime(seconds: number): string {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
+
 function totalEarnedStars(levels: Level[]) {
   return levels.reduce((sum, l) => sum + l.earnedStars, 0);
 }
@@ -84,6 +90,18 @@ export default function ChooseLevelScreen() {
   const router = useRouter();
   const [levels] = useState<Level[]>(LEVELS);
   const [selected, setSelected] = useState<LevelId>("easy");
+  const [stats, setStats] = useState<LevelStats | null>(null);
+
+  // Load saved level on mount
+  useEffect(() => {
+    GameStorage.getSelectedLevel().then(setSelected);
+  }, []);
+
+  // Persist selection + reload stats whenever level changes
+  useEffect(() => {
+    GameStorage.setSelectedLevel(selected);
+    GameStorage.getLevelStats(selected).then(setStats);
+  }, [selected]);
 
   const unlockedMap = useMemo(
     () => Object.fromEntries(LEVELS.map((l) => [l.id, isLevelUnlocked(l.id, levels)])),
@@ -111,6 +129,20 @@ export default function ChooseLevelScreen() {
           </Animate>
         ))}
       </ScrollView>
+
+      {/* Best stats for selected level */}
+      <View style={{ flexDirection: "row", gap: 10, paddingHorizontal: 16, paddingBottom: 12 }}>
+        <StatItem
+          label="Best Time"
+          value={stats?.bestTime != null ? formatTime(stats.bestTime) : "—"}
+          tag={levels.find((l) => l.id === selected)?.name}
+        />
+        <StatItem
+          label="Fewest Moves"
+          value={stats?.fewestMoves != null ? String(stats.fewestMoves) : "—"}
+          tag={levels.find((l) => l.id === selected)?.name}
+        />
+      </View>
 
       {/* Footer */}
       <ScreenFooter>Each level reshuffles the cards every time you play.</ScreenFooter>

@@ -1,27 +1,44 @@
 import { Button } from "@/components";
 import { Animate } from "@/components/common";
 import { StatItem } from "@/components/game";
+import type { GameLevel } from "@/redux/features/gameSlice";
+import { GameStorage } from "@/services/storages";
 import IconButton from "@/components/ui/IconButton";
 import { colors } from "@/styles/colors";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { Play, Settings } from "lucide-react-native";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Image, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-type GameStats = {
-  stars: number;
-  bestTime: string;
-  fewestMoves: number;
-};
+function formatTime(seconds: number): string {
+  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+}
 
 export default function HomeScreen() {
   const router = useRouter();
-  const [stats] = useState<GameStats>({
-    stars: 14,
-    bestTime: "0:38",
-    fewestMoves: 12,
-  });
+  const [totalStars, setTotalStars] = useState(0);
+  const [selectedLevel, setSelectedLevel] = useState<GameLevel>("easy");
+  const [bestTime, setBestTime] = useState<string>("—");
+  const [fewestMoves, setFewestMoves] = useState<string>("—");
+
+  // Reload every time the user comes back to home (e.g. after a game)
+  useFocusEffect(
+    useCallback(() => {
+      async function load() {
+        const [level, stars] = await Promise.all([
+          GameStorage.getSelectedLevel(),
+          GameStorage.getTotalStars(),
+        ]);
+        const stats = await GameStorage.getLevelStats(level);
+        setSelectedLevel(level);
+        setTotalStars(stars);
+        setBestTime(stats.bestTime != null ? formatTime(stats.bestTime) : "—");
+        setFewestMoves(stats.fewestMoves != null ? String(stats.fewestMoves) : "—");
+      }
+      load();
+    }, []),
+  );
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
@@ -41,7 +58,7 @@ export default function HomeScreen() {
             source={require("../../assets/star.png")}
             style={{ width: 24, height: 24, resizeMode: "contain" }}
           />
-          <Text className="lg-medium">{stats.stars}</Text>
+          <Text className="lg-medium">{totalStars}</Text>
         </View>
 
         {/* Settings */}
@@ -72,8 +89,16 @@ export default function HomeScreen() {
 
       <Animate type="fade-up" duration={500} delay={220} distance={30}>
         <View style={{ flexDirection: "row", gap: 14, paddingHorizontal: 24, paddingBottom: 14 }}>
-          <StatItem label="Best Time" value={"99.99"} tag="Easy" />
-          <StatItem label="Fewest Moves" value={"99.99"} tag="Easy" />
+          <StatItem
+            label="Best Time"
+            value={bestTime}
+            tag={selectedLevel.charAt(0).toUpperCase() + selectedLevel.slice(1)}
+          />
+          <StatItem
+            label="Fewest Moves"
+            value={fewestMoves}
+            tag={selectedLevel.charAt(0).toUpperCase() + selectedLevel.slice(1)}
+          />
         </View>
       </Animate>
 

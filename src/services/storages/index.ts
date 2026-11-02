@@ -9,6 +9,7 @@ const KEYS = {
   stars: (level: GameLevel) => `@game_stars_${level}`,
   totalStars: "@game_total_stars",
   unlockedLevels: "@game_unlocked_levels",
+  selectedLevel: "@game_selected_level",
 } as const;
 
 // ─── Per-level stats ──────────────────────────────────────────────────────────
@@ -137,6 +138,18 @@ async function resetAll(): Promise<void> {
   await AsyncStorage.removeItem(KEYS.unlockedLevels);
 }
 
+// ─── Selected level ───────────────────────────────────────────────────────────
+
+async function getSelectedLevel(): Promise<GameLevel> {
+  const raw = await AsyncStorage.getItem(KEYS.selectedLevel);
+  const valid: GameLevel[] = ["easy", "medium", "hard", "expert"];
+  return raw && valid.includes(raw as GameLevel) ? (raw as GameLevel) : "easy";
+}
+
+async function setSelectedLevel(level: GameLevel): Promise<void> {
+  await AsyncStorage.setItem(KEYS.selectedLevel, level);
+}
+
 // ─── Public API ───────────────────────────────────────────────────────────────
 
 export const GameStorage = {
@@ -165,6 +178,10 @@ export const GameStorage = {
 
   // convenience
   getLevelStats,
+
+  // selected level
+  getSelectedLevel,
+  setSelectedLevel,
 
   // reset
   resetLevel,
