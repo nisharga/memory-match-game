@@ -14,9 +14,9 @@ jest.mock("expo-linear-gradient", () => {
   };
 });
 
-const DEFAULT_COLORS = ["#2e6b6a", "#2e6b6a"];
+const DEFAULT_COLORS = ["#7ef0c9", "#2bc49a"];
 const PRESSED_COLORS = ["#5fd9b0", "#1fa882"];
-const INACTIVE_COLORS = ["#7ef0c9", "#2bc49a"];
+const INACTIVE_COLORS = ["#2e6b6a", "#2e6b6a"];
 
 const getButton = () => screen.getByRole("button");
 const getGradientColors = () => screen.getByTestId("gradient").props.colors;
