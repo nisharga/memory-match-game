@@ -22,7 +22,6 @@ export const LEVEL_CONFIG: Record<
   easy: { label: "Easy", columns: 3, rows: 4, totalPairs: 6, totalSeconds: 30, maxMoves: 12 },
   medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 75 },
   hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 90 },
-  expert: { label: "Expert", columns: 4, rows: 6, totalPairs: 12, totalSeconds: 100 },
 };
 
 // ─── Card types ───────────────────────────────────────────────────────────────
