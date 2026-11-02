@@ -54,8 +54,8 @@ export const Button: React.FC<ButtonProps> = ({
         bounciness: 4,
       }).start();
     }
-    onPressIn?.(e);
     playSound("tap");
+    onPressIn?.(e);
   };
 
   const handlePressOut = (e: any) => {

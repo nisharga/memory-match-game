@@ -113,14 +113,17 @@ export default function SettingScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* ── Toggles ── */}
-        <Card>
-          <ToggleRow label="Sound effects" value={soundEffects} onChange={handleSoundEffects} />
-          <ToggleRow label="Music" value={music} onChange={handleMusic} />
-          <ToggleRow label="Vibration" value={vibration} onChange={handleVibration} isLast />
-        </Card>
-
+        <Animate type="fade-up" duration={500} delay={360} distance={30}>
+          <Card>
+            <ToggleRow label="Sound effects" value={soundEffects} onChange={handleSoundEffects} />
+            <ToggleRow label="Music" value={music} onChange={handleMusic} />
+            <ToggleRow label="Vibration" value={vibration} onChange={handleVibration} isLast />
+          </Card>
+        </Animate>
         {/* ── How to play ── */}
-        <HowToPlayAccordion />
+        <Animate type="fade-up" duration={500} delay={360} distance={30}>
+          <HowToPlayAccordion />
+        </Animate>
 
         {/* ── Reset all progress ── */}
         <Animate type="fade-up" duration={500} delay={360} distance={30}>
