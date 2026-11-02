@@ -50,16 +50,6 @@ const LEVELS: Level[] = [
     seconds: 90,
     earnedStars: 0,
   },
-  {
-    id: "expert",
-    badge: "",
-    badgeColor: colors.muted,
-    name: "Expert",
-    pairs: 12,
-    seconds: 120,
-    earnedStars: 0,
-    starsRequired: 6,
-  },
 ];
 
 function formatTime(seconds: number): string {
@@ -70,7 +60,7 @@ function totalEarnedStars(levels: Level[]) {
   return levels.reduce((sum, l) => sum + l.earnedStars, 0);
 }
 
-function isLevelUnlocked(id: LevelId, levels: Level[]): boolean {
+function isLevelUnlocked(id: LevelId, levels: Level[]) {
   const easyStars = levels.find((l) => l.id === "easy")?.earnedStars ?? 0;
   const mediumStars = levels.find((l) => l.id === "medium")?.earnedStars ?? 0;
   const total = totalEarnedStars(levels);
@@ -82,8 +72,6 @@ function isLevelUnlocked(id: LevelId, levels: Level[]): boolean {
       return easyStars > 0;
     case "hard":
       return mediumStars > 0;
-    case "expert":
-      return total >= 6;
   }
 }
 

@@ -53,13 +53,7 @@ export default function HomeScreen() {
         }}
       >
         {/* Stars earned */}
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-          <Image
-            source={require("../../assets/star.png")}
-            style={{ width: 24, height: 24, resizeMode: "contain" }}
-          />
-          <Text className="lg-medium">{totalStars}</Text>
-        </View>
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}></View>
 
         {/* Settings */}
         <IconButton onPress={() => router.push("/setting")}>

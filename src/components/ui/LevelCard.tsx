@@ -100,7 +100,6 @@ export default function LevelCard({
       </View>
 
       {/* Stars */}
-      {isUnlocked && <StarRow earned={earnedStars} total={totalStars} />}
     </Pressable>
   );
 }
