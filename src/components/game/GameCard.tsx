@@ -1,6 +1,7 @@
 import { colors } from "@/styles/colors";
 import { Pressable, View } from "react-native";
 import Svg, { Circle, Polygon, Rect } from "react-native-svg";
+import { Animate } from "../common";
 
 // ─── Public types ─────────────────────────────────────────────────────────────
 
@@ -60,25 +61,27 @@ export default function GameCard({
   const shapeSize = Math.floor(cardWidth * 0.48);
 
   return (
-    <Pressable
-      onPress={() => !isMatched && onPress(id)}
-      style={({ pressed }) => ({
-        width: cardWidth,
-        height: cardHeight,
-        borderRadius: 16,
-        backgroundColor: bgColor,
-        borderWidth: 2,
-        borderColor,
-        alignItems: "center",
-        justifyContent: "center",
-        opacity: pressed && !isMatched ? 0.85 : 1,
-      })}
-    >
-      {!isHidden && (
-        <View style={{ opacity: isMatched ? 0.75 : 1 }}>
-          <Shape type={shape} color={shapeColor} size={shapeSize} />
-        </View>
-      )}
-    </Pressable>
+    <Animate type="flip-left" duration={500} delay={360} distance={30}>
+      <Pressable
+        onPress={() => !isMatched && onPress(id)}
+        style={({ pressed }) => ({
+          width: cardWidth,
+          height: cardHeight,
+          borderRadius: 16,
+          backgroundColor: bgColor,
+          borderWidth: 2,
+          borderColor,
+          alignItems: "center",
+          justifyContent: "center",
+          opacity: pressed && !isMatched ? 0.85 : 1,
+        })}
+      >
+        {!isHidden && (
+          <View style={{ opacity: isMatched ? 0.75 : 1 }}>
+            <Shape type={shape} color={shapeColor} size={shapeSize} />
+          </View>
+        )}
+      </Pressable>
+    </Animate>
   );
 }

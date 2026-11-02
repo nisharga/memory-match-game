@@ -132,13 +132,8 @@ export default function GameScreen() {
         <GameProgressBar progress={progress} />
       </Animate>
 
-      <Animate type="zoom-in-up" duration={500} distance={55} className="mb-2">
-        <GameGrid
-          cards={cards}
-          columns={game.columns}
-          onCardPress={(id) => dispatch(flipCard(id))}
-        />
-      </Animate>
+      {/* <Animate type="zoom-in-up" duration={500} distance={55} className="mb-2"> */}
+      <GameGrid cards={cards} columns={game.columns} onCardPress={(id) => dispatch(flipCard(id))} />
 
       <GameStatusMessage message={statusMessage} />
 
