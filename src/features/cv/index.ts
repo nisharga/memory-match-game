@@ -4,7 +4,6 @@ export { default as LiveFab } from "./LiveFab";
 export { default as PersonalSection } from "./screens/PersonalSection";
 export { default as SummarySection } from "./screens/SummarySection";
 export { default as ExperienceSection } from "./screens/ExperienceSection";
-export { default as EducationSection } from "./screens/EducationSection";
 export { default as SkillsSection } from "./screens/SkillsSection";
 export { default as AdditionalSection } from "./screens/AdditionalSection";
 export { default as JobItemEditor } from "./screens/JobItemEditor";
