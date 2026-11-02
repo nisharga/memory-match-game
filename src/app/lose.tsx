@@ -1,8 +1,8 @@
 import { Animate } from "@/components/common";
 import ResultActions from "@/components/ui/ResultActions";
 import StatBox from "@/components/ui/StatBox";
-import { selectGame, selectLoseReason } from "@/redux/features/gameSlice";
-import { useAppSelector } from "@/redux/store";
+import { clearStatus, selectGame, selectLoseReason } from "@/redux/features/gameSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useResultMusic } from "@/hooks";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
@@ -40,6 +40,7 @@ function ProgressBar({ found, total }: { found: number; total: number }) {
 
 export default function LoseScreen() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const game = useAppSelector(selectGame);
   const loseReason = useAppSelector(selectLoseReason);
 
@@ -125,7 +126,10 @@ export default function LoseScreen() {
             primary={{
               label: "Try again",
               icon: <RefreshCw size={18} color={colors.primaryForeground} strokeWidth={2.2} />,
-              onPress: () => router.replace("/game"),
+              onPress: () => {
+                dispatch(clearStatus());
+                router.replace("/game");
+              },
             }}
             secondaryLeft={{
               label: "Choose level",

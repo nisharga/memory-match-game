@@ -20,8 +20,8 @@ export const LEVEL_CONFIG: Record<
   }
 > = {
   easy: { label: "Easy", columns: 3, rows: 4, totalPairs: 6, totalSeconds: 40, maxMoves: 30 },
-  medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 75, maxMoves: 32 },
-  hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 90, maxMoves: 36 },
+  medium: { label: "Medium", columns: 4, rows: 4, totalPairs: 8, totalSeconds: 75, maxMoves: 45 },
+  hard: { label: "Hard", columns: 4, rows: 5, totalPairs: 10, totalSeconds: 90, maxMoves: 40 },
   expert: { label: "Expert", columns: 4, rows: 6, totalPairs: 12, totalSeconds: 100 },
 };
 
@@ -187,6 +187,11 @@ const gameSlice = createSlice({
       }
     },
 
+    // Reset status to idle — called on game screen mount to clear stale won/lost.
+    clearStatus(state) {
+      state.status = "idle";
+    },
+
     // Restart the same level with freshly shuffled cards.
     resetGame(state) {
       const cfg = LEVEL_CONFIG[state.level];
@@ -202,7 +207,8 @@ const gameSlice = createSlice({
   },
 });
 
-export const { startGame, flipCard, matchCards, resetFlipped, tick, resetGame } = gameSlice.actions;
+export const { startGame, flipCard, matchCards, resetFlipped, tick, resetGame, clearStatus } =
+  gameSlice.actions;
 
 export default gameSlice.reducer;
 

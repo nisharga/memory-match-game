@@ -9,6 +9,7 @@ import {
 import { useBackgroundMusic } from "@/hooks";
 import { GameStorage } from "@/services/storages";
 import {
+  clearStatus,
   flipCard,
   matchCards,
   resetFlipped,
@@ -51,8 +52,9 @@ export default function GameScreen() {
 
   useBackgroundMusic("game");
 
-  // ── Start game using the level saved in choose-level screen ────────────
+  // ── Clear stale won/lost status, then start game ────────────────────────
   useEffect(() => {
+    dispatch(clearStatus()); // prevents navigation effect firing on stale "won"/"lost"
     GameStorage.getSelectedLevel().then((level) => dispatch(startGame(level)));
   }, []);
 

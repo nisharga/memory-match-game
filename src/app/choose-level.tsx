@@ -1,6 +1,7 @@
 import { Animate, ScreenFooter, ScreenHeader } from "@/components/common";
 import { StatItem } from "@/components/game";
 import LevelCard from "@/components/ui/LevelCard";
+import { useSound } from "@/hooks";
 import { GameStorage, type LevelStats } from "@/services/storages";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
@@ -91,6 +92,7 @@ export default function ChooseLevelScreen() {
   const [levels] = useState<Level[]>(LEVELS);
   const [selected, setSelected] = useState<LevelId>("easy");
   const [stats, setStats] = useState<LevelStats | null>(null);
+  const { playSound } = useSound();
 
   // Load saved level on mount
   useEffect(() => {
@@ -124,7 +126,10 @@ export default function ChooseLevelScreen() {
               {...level}
               isUnlocked={!!unlockedMap[level.id]}
               isSelected={selected === level.id}
-              onPress={() => setSelected(level.id)}
+              onPress={() => {
+                playSound("tap");
+                setSelected(level.id);
+              }}
             />
           </Animate>
         ))}

@@ -5,6 +5,7 @@ import { useRouter } from "expo-router";
 import { Hourglass, Lightbulb, RefreshCw } from "lucide-react-native";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useResultMusic } from "@/hooks";
 
 // ─── Mock game result (replace with real params/state later) ─────────────────
 const RESULT = {
@@ -52,6 +53,7 @@ function ProgressBar({ found, total }: { found: number; total: number }) {
 
 export default function TimeUpScreen() {
   const router = useRouter();
+  useResultMusic("lose");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>

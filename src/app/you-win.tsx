@@ -4,8 +4,8 @@ import ResultActions from "@/components/ui/ResultActions";
 import StarRating from "@/components/ui/StarRating";
 import StatBox from "@/components/ui/StatBox";
 import { useResultMusic } from "@/hooks";
-import { selectGame, selectStarsEarned } from "@/redux/features/gameSlice";
-import { useAppSelector } from "@/redux/store";
+import { clearStatus, selectGame, selectStarsEarned } from "@/redux/features/gameSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { GameStorage } from "@/services/storages";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function YouWinScreen() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const game = useAppSelector(selectGame);
   const stars = useAppSelector(selectStarsEarned);
 
@@ -148,7 +149,10 @@ export default function YouWinScreen() {
             }}
             secondaryLeft={{
               label: "Play again",
-              onPress: () => router.replace("/game"),
+              onPress: () => {
+                dispatch(clearStatus());
+                router.replace("/game");
+              },
             }}
             secondaryRight={{
               label: "Home",
