@@ -2,9 +2,8 @@ import { Animate, ScreenFooter, ScreenHeader } from "@/components/common";
 import LevelCard from "@/components/ui/LevelCard";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
-import { ChevronLeft } from "lucide-react-native";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 type LevelId = "easy" | "medium" | "hard" | "expert";
@@ -94,16 +93,7 @@ export default function ChooseLevelScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
       {/* Header */}
-      <ScreenHeader
-        title="Choose level"
-        align="left"
-        left={
-          <Pressable onPress={() => router.back()} hitSlop={12}>
-            <ChevronLeft size={26} color={colors.foreground} strokeWidth={2} />
-          </Pressable>
-        }
-        onPress={() => router.push("/")}
-      />
+      <ScreenHeader title="Choose level" align="left" onPress={() => router.back()} />
 
       {/* Level cards */}
       <ScrollView

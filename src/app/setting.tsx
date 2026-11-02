@@ -1,7 +1,7 @@
 import { ScreenFooter, ScreenHeader, SettingItem } from "@/components/common";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
-import { Music, Smartphone, SpeakerIcon, Swords, Volume2 } from "lucide-react-native";
+import { Layers, Music, Smartphone, Trophy, Volume2 } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -114,7 +114,7 @@ export default function SettingScreen() {
           />
           <SettingItem
             index={3}
-            icon={<Swords size={18} color={colors.primary} strokeWidth={2} />}
+            icon={<Trophy size={18} color={colors.primary} strokeWidth={2} />}
             title="Difficulty"
             subtitle="Affects time limits and card counts"
             right="chevron"
@@ -130,7 +130,7 @@ export default function SettingScreen() {
         <Section label="Appearance">
           <SettingItem
             index={4}
-            icon={<SpeakerIcon size={18} color={colors.primary} strokeWidth={2} />}
+            icon={<Layers size={18} color={colors.primary} strokeWidth={2} />}
             title="Card Theme"
             subtitle={`Current: ${CARD_THEMES.find((t) => t.id === cardTheme)?.label ?? "Teal"}`}
             right="chevron"
