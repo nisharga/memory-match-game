@@ -58,7 +58,7 @@ export default function GameScreen() {
   const [pausedModal, setPausedModal] = useState(false);
   const [restartModal, setRestartModal] = useState(false);
 
-  useBackgroundMusic("game");
+  // useBackgroundMusic("game");
 
   const progress = 1 - GAME.elapsedSeconds / GAME.totalSeconds;
 
