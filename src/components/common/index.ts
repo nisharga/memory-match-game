@@ -7,3 +7,4 @@ export { default as SettingItem } from "./SettingItem";
 export { default as WavingHand } from "./WavingHand";
 export { default as Animate } from "./Animate";
 export type { AnimationName } from "./Animate";
+export { default as ScreenFooter } from "./ScreenFooter";

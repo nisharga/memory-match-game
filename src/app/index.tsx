@@ -1,4 +1,5 @@
 import { Animate } from "@/components/common";
+import IconButton from "@/components/ui/IconButton";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
 import { Play, Settings } from "lucide-react-native";
@@ -36,26 +37,18 @@ export default function HomeScreen() {
         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
           <Image
             source={require("../../assets/star.png")}
-            style={{ width: 22, height: 22, resizeMode: "contain" }}
+            style={{ width: 24, height: 24, resizeMode: "contain" }}
           />
           <Text className="lg-medium">{stats.stars}</Text>
         </View>
 
         {/* Settings */}
-        <Pressable
+        <IconButton
+          className="flex h-12 w-12 flex-row items-center justify-center rounded-xl bg-[#165253]"
           onPress={() => router.push("/setting")}
-          hitSlop={12}
-          style={{
-            width: 40,
-            height: 40,
-            backgroundColor: colors.surface,
-            borderRadius: 12,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
         >
           <Settings size={20} color={colors.foreground} strokeWidth={1.8} />
-        </Pressable>
+        </IconButton>
       </View>
 
       {/* Hero: logo + title */}

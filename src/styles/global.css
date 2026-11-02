@@ -139,7 +139,7 @@
     @apply font-inter text-[14px] leading-[20px] text-muted-foreground;
   }
   .sm-medium {
-    @apply font-inter-medium text-[14px] leading-[20px] text-primary;
+    @apply font-inter-medium text-[14px] leading-[20px] text-muted-foreground;
   }
   .sm-semibold {
     @apply font-inter-semibold text-[14px] leading-[20px] text-foreground;
@@ -155,7 +155,7 @@
     @apply font-inter-medium text-[16px] leading-[24px] text-muted-foreground;
   }
   .base-semibold {
-    @apply font-inter-semibold text-[16px] leading-[24px] text-primary;
+    @apply font-inter-semibold text-[16px] leading-[24px] text-muted-foreground;
   }
 
   .lg-normal {
