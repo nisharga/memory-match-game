@@ -29,6 +29,8 @@ import { Pause, RefreshCw } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors } from "@/styles/colors";
+import { AndroidNavSpacer, Screen } from "@/components";
+import { View } from "react-native";
 
 const MATCH_DELAY = 700; // ms to show matched pair before locking
 const MISMATCH_DELAY = 900; // ms to show wrong pair before flipping back
@@ -110,7 +112,7 @@ export default function GameScreen() {
       : "";
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
+    <Screen style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
       <Animate type="fade-up" duration={500} distance={55} className="mb-2">
         <GameHeader
           title={game.level.charAt(0).toUpperCase() + game.level.slice(1)}
@@ -134,6 +136,7 @@ export default function GameScreen() {
 
       {/* <Animate type="zoom-in-up" duration={500} distance={55} className="mb-2"> */}
       <GameGrid cards={cards} columns={game.columns} onCardPress={(id) => dispatch(flipCard(id))} />
+      <View className="mb-12"></View>
 
       <GameStatusMessage message={statusMessage} />
 
@@ -191,6 +194,6 @@ export default function GameScreen() {
         ]}
         onRequestClose={() => setRestartModal(false)}
       />
-    </SafeAreaView>
+    </Screen>
   );
 }

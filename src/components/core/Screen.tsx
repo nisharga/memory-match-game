@@ -1,6 +1,12 @@
 import React, { useEffect } from "react";
 import type { ReactNode } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  type StyleProp,
+  type ViewStyle,
+} from "react-native";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -13,6 +19,7 @@ import { SafeAreaView, type Edge } from "react-native-safe-area-context";
 type Props = {
   children: ReactNode;
   className?: string;
+  style?: StyleProp<ViewStyle>;
   statusBar?: StatusBarStyle;
   edges?: Edge[];
 };
@@ -20,6 +27,7 @@ type Props = {
 export default function Screen({
   children,
   className = "",
+  style,
   statusBar = "auto",
   edges = ["top"],
 }: Props) {
@@ -45,7 +53,7 @@ export default function Screen({
   }));
 
   return (
-    <Animated.View style={[{ flex: 1, backgroundColor: "#f7f8fa" }, animStyle]}>
+    <Animated.View style={[{ flex: 1 }, style, animStyle]}>
       <SafeAreaView style={{ flex: 1 }} edges={edges} className={`bg-background ${className}`}>
         <StatusBar style={statusBar} />
 
