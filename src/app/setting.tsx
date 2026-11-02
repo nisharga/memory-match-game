@@ -1,56 +1,92 @@
-import {
-  AppModal,
-  ModalInfoList,
-  ScreenFooter,
-  ScreenHeader,
-  SettingItem,
-} from "@/components/common";
+import { AppModal, ModalInfoList } from "@/components/common";
+import { SettingsStorage, type CardPicture } from "@/services/storages/gameSettings";
+import { GameStorage } from "@/services/storages";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
-import {
-  Layers,
-  Music,
-  Pause,
-  RefreshCw,
-  Smartphone,
-  TriangleAlert,
-  Trophy,
-  Volume2,
-} from "lucide-react-native";
-import { useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { ChevronRight, RotateCcw, TriangleAlert } from "lucide-react-native";
+import { useEffect, useState } from "react";
+import { Pressable, ScrollView, Switch, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// ─── Card theme options ────────────────────────────────────────────────────────
+// ─── Card picture options ─────────────────────────────────────────────────────
 
-const CARD_THEMES = [
-  { id: "teal", color: colors.cardBack, label: "Teal" },
-  { id: "indigo", color: colors.shapeIndigo, label: "Indigo" },
-  { id: "orange", color: colors.shapeOrange, label: "Orange" },
-  { id: "pink", color: colors.shapePink, label: "Pink" },
-  { id: "blue", color: colors.shapeBlue, label: "Blue" },
+const CARD_PICTURES: { id: CardPicture; label: string }[] = [
+  { id: "shapes", label: "Shapes" },
+  { id: "fruits", label: "Fruits" },
+  { id: "animals", label: "Animals" },
 ];
 
-// ─── Section wrapper ──────────────────────────────────────────────────────────
+// ─── Toggle row ───────────────────────────────────────────────────────────────
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
+function ToggleRow({
+  label,
+  value,
+  onChange,
+  isLast,
+}: {
+  label: string;
+  value: boolean;
+  onChange: (v: boolean) => void;
+  isLast?: boolean;
+}) {
   return (
-    <View style={{ gap: 8 }}>
-      <Text className="stat-label" style={{ paddingHorizontal: 4 }}>
-        {label}
-      </Text>
-      <View
-        style={{
-          backgroundColor: colors.surface,
-          borderRadius: 18,
-          overflow: "hidden",
-          borderWidth: 1,
-          borderColor: colors.border,
-        }}
-      >
-        {children}
-      </View>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 16,
+        paddingVertical: 14,
+        borderBottomWidth: isLast ? 0 : 1,
+        borderBottomColor: colors.border,
+      }}
+    >
+      <Text style={{ fontSize: 15, fontWeight: "500", color: colors.foreground }}>{label}</Text>
+      <Switch
+        value={value}
+        onValueChange={onChange}
+        trackColor={{ false: colors.muted, true: colors.primary }}
+        thumbColor={colors.white}
+      />
     </View>
+  );
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+
+function Card({ children }: { children: React.ReactNode }) {
+  return (
+    <View
+      style={{
+        backgroundColor: colors.surface,
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: colors.border,
+        overflow: "hidden",
+      }}
+    >
+      {children}
+    </View>
+  );
+}
+
+// ─── Section label ────────────────────────────────────────────────────────────
+
+function SectionLabel({ label }: { label: string }) {
+  return (
+    <Text
+      style={{
+        fontSize: 11,
+        fontWeight: "700",
+        letterSpacing: 1.2,
+        color: colors.mutedForeground,
+        textTransform: "uppercase",
+        paddingHorizontal: 4,
+        marginBottom: 6,
+      }}
+    >
+      {label}
+    </Text>
   );
 }
 
@@ -59,262 +95,185 @@ function Section({ label, children }: { label: string; children: React.ReactNode
 export default function SettingScreen() {
   const router = useRouter();
 
-  const [soundEnabled, setSoundEnabled] = useState(true);
-  const [musicEnabled, setMusicEnabled] = useState(true);
-  const [vibrationEnabled, setVibrationEnabled] = useState(true);
-  const [cardTheme, setCardTheme] = useState("teal");
-
-  // Modal demo state
-  const [pausedModal, setPausedModal] = useState(false);
-  const [restartModal, setRestartModal] = useState(false);
+  const [soundEffects, setSoundEffectsState] = useState(true);
+  const [music, setMusicState] = useState(true);
+  const [vibration, setVibrationState] = useState(true);
+  const [cardPicture, setCardPictureState] = useState<CardPicture>("shapes");
   const [resetModal, setResetModal] = useState(false);
 
-  function handleSoundToggle(value: boolean) {
-    setSoundEnabled(value);
-    console.log("[Settings] Sound effects:", value);
+  // Load persisted settings on mount
+  useEffect(() => {
+    SettingsStorage.getAll().then((s) => {
+      setSoundEffectsState(s.soundEffects);
+      setMusicState(s.music);
+      setVibrationState(s.vibration);
+      setCardPictureState(s.cardPicture);
+    });
+  }, []);
+
+  function handleSoundEffects(v: boolean) {
+    setSoundEffectsState(v);
+    SettingsStorage.setSoundEffects(v);
   }
 
-  function handleMusicToggle(value: boolean) {
-    setMusicEnabled(value);
-    console.log("[Settings] Music:", value);
+  function handleMusic(v: boolean) {
+    setMusicState(v);
+    SettingsStorage.setMusic(v);
   }
 
-  function handleVibrationToggle(value: boolean) {
-    setVibrationEnabled(value);
-    console.log("[Settings] Vibration:", value);
+  function handleVibration(v: boolean) {
+    setVibrationState(v);
+    SettingsStorage.setVibration(v);
   }
 
-  function handleCardTheme(id: string) {
-    setCardTheme(id);
-    console.log("[Settings] Card theme:", id);
+  function handleCardPicture(id: CardPicture) {
+    setCardPictureState(id);
+    SettingsStorage.setCardPicture(id);
+  }
+
+  async function handleResetAll() {
+    await GameStorage.resetAll();
+    setResetModal(false);
   }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }} edges={["top", "bottom"]}>
-      {/* Header */}
-      <ScreenHeader title="Settings" align="left" onPress={() => router.back()} />
-
-      <ScrollView
-        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 8, gap: 20, paddingBottom: 16 }}
-        showsVerticalScrollIndicator={false}
+      {/* ── Header ── */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 12,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+        }}
       >
-        {/* Audio */}
-        <Section label="Audio">
-          <SettingItem
-            index={0}
-            icon={<Volume2 size={18} color={colors.primary} strokeWidth={2} />}
-            title="Sound Effects"
-            subtitle="Card flips, matches and game sounds"
-            right="toggle"
-            toggled={soundEnabled}
-            onToggle={handleSoundToggle}
-          />
-          <SettingItem
-            index={1}
-            icon={<Music size={18} color={colors.primary} strokeWidth={2} />}
-            title="Music"
-            subtitle="Background music during gameplay"
-            right="toggle"
-            toggled={musicEnabled}
-            onToggle={handleMusicToggle}
-            isLast
-          />
-        </Section>
-
-        {/* Gameplay */}
-        <Section label="Gameplay">
-          <SettingItem
-            index={2}
-            icon={<Smartphone size={18} color={colors.primary} strokeWidth={2} />}
-            title="Vibration"
-            subtitle="Haptic feedback on card tap and match"
-            right="toggle"
-            toggled={vibrationEnabled}
-            onToggle={handleVibrationToggle}
-          />
-          <SettingItem
-            index={3}
-            icon={<Trophy size={18} color={colors.primary} strokeWidth={2} />}
-            title="Difficulty"
-            subtitle="Affects time limits and card counts"
-            right="chevron"
-            onPress={() => {
-              console.log("[Settings] Difficulty pressed → navigate to choose-level");
-              router.push("/choose-level");
-            }}
-            isLast
-          />
-        </Section>
-
-        {/* Appearance */}
-        <Section label="Appearance">
-          <SettingItem
-            index={4}
-            icon={<Layers size={18} color={colors.primary} strokeWidth={2} />}
-            title="Card Theme"
-            subtitle={`Current: ${CARD_THEMES.find((t) => t.id === cardTheme)?.label ?? "Teal"}`}
-            right="chevron"
-            isLast
-            expandedContent={
-              <View style={{ flexDirection: "row", gap: 10, flexWrap: "wrap" }}>
-                {CARD_THEMES.map((theme) => (
-                  <Pressable
-                    key={theme.id}
-                    onPress={() => handleCardTheme(theme.id)}
-                    style={{ alignItems: "center", gap: 6 }}
-                  >
-                    <View
-                      style={{
-                        width: 48,
-                        height: 48,
-                        borderRadius: 12,
-                        backgroundColor: theme.color,
-                        borderWidth: 2.5,
-                        borderColor: cardTheme === theme.id ? colors.primary : "transparent",
-                      }}
-                    />
-                    <Text className="xss-normal">{theme.label}</Text>
-                  </Pressable>
-                ))}
-              </View>
-            }
-          />
-        </Section>
-
-        {/* Modal demo — remove after testing */}
-        <Section label="Modal demo (remove later)">
-          <Pressable
-            onPress={() => setPausedModal(true)}
-            style={{
-              paddingVertical: 16,
-              paddingHorizontal: 18,
-              borderBottomWidth: 1,
-              borderBottomColor: colors.border,
-            }}
-          >
-            <Text className="base-semibold" style={{ color: colors.foreground }}>
-              Paused modal
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setRestartModal(true)}
-            style={{
-              paddingVertical: 16,
-              paddingHorizontal: 18,
-              borderBottomWidth: 1,
-              borderBottomColor: colors.border,
-            }}
-          >
-            <Text className="base-semibold" style={{ color: colors.foreground }}>
-              Restart modal
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setResetModal(true)}
-            style={{ paddingVertical: 16, paddingHorizontal: 18 }}
-          >
-            <Text className="base-semibold" style={{ color: colors.destructive }}>
-              Reset modal
-            </Text>
-          </Pressable>
-        </Section>
-
-        {/* Screen links (testing) */}
-        <View
+        <Pressable
+          onPress={() => router.back()}
+          hitSlop={12}
           style={{
-            flexDirection: "row",
-            justifyContent: "center",
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            backgroundColor: colors.surface,
+            borderWidth: 1,
+            borderColor: colors.border,
             alignItems: "center",
-            gap: 6,
-            paddingVertical: 8,
+            justifyContent: "center",
           }}
         >
-          {[
-            { label: "You Win", onPress: () => router.push("/you-win") },
-            { label: "Time Up", onPress: () => router.push("/time-up") },
-            { label: "Game", onPress: () => router.push("/game") },
-          ].map(({ label, onPress }, i, arr) => (
-            <View key={label} style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-              <Pressable onPress={onPress} hitSlop={8}>
-                <Text className="sm-medium" style={{ color: colors.link }}>
-                  {label}
-                </Text>
-              </Pressable>
-              {i < arr.length - 1 && (
-                <View
-                  style={{ width: 3, height: 3, borderRadius: 2, backgroundColor: colors.muted }}
-                />
-              )}
+          <ChevronRight
+            size={20}
+            color={colors.foreground}
+            strokeWidth={2.2}
+            style={{ transform: [{ rotate: "180deg" }] }}
+          />
+        </Pressable>
+        <Text style={{ fontSize: 22, fontWeight: "700", color: colors.heading }}>Settings</Text>
+      </View>
+
+      <ScrollView
+        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 4, gap: 20, paddingBottom: 32 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* ── Toggles ── */}
+        <Card>
+          <ToggleRow label="Sound effects" value={soundEffects} onChange={handleSoundEffects} />
+          <ToggleRow label="Music" value={music} onChange={handleMusic} />
+          <ToggleRow label="Vibration" value={vibration} onChange={handleVibration} isLast />
+        </Card>
+
+        {/* ── Card pictures ── */}
+        <View>
+          <SectionLabel label="Card Pictures" />
+          <Card>
+            <View
+              style={{
+                flexDirection: "row",
+                padding: 6,
+                gap: 6,
+              }}
+            >
+              {CARD_PICTURES.map(({ id, label }) => {
+                const selected = cardPicture === id;
+                return (
+                  <Pressable
+                    key={id}
+                    onPress={() => handleCardPicture(id)}
+                    style={{
+                      flex: 1,
+                      paddingVertical: 10,
+                      borderRadius: 10,
+                      alignItems: "center",
+                      backgroundColor: selected ? colors.primary : "transparent",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: "600",
+                        color: selected ? colors.primaryForeground : colors.body,
+                      }}
+                    >
+                      {label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
             </View>
-          ))}
+          </Card>
         </View>
+
+        {/* ── How to play ── */}
+        <Pressable
+          onPress={() => router.push("/faq" as any)}
+          style={{
+            backgroundColor: colors.surface,
+            borderRadius: 16,
+            borderWidth: 1,
+            borderColor: colors.border,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingHorizontal: 16,
+            paddingVertical: 16,
+          }}
+        >
+          <Text style={{ fontSize: 15, fontWeight: "500", color: colors.foreground }}>
+            How to play
+          </Text>
+          <ChevronRight size={18} color={colors.mutedForeground} strokeWidth={2} />
+        </Pressable>
+
+        {/* ── Reset all progress ── */}
+        <Pressable
+          onPress={() => setResetModal(true)}
+          style={{
+            borderRadius: 16,
+            borderWidth: 1.5,
+            borderColor: colors.destructive,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 10,
+            paddingVertical: 16,
+          }}
+        >
+          <RotateCcw size={17} color={colors.destructive} strokeWidth={2.2} />
+          <Text style={{ fontSize: 15, fontWeight: "600", color: colors.destructive }}>
+            Reset all progress
+          </Text>
+        </Pressable>
       </ScrollView>
 
-      <ScreenFooter>Settings are saved automatically.</ScreenFooter>
+      {/* ── Footer ── */}
+      <View style={{ paddingBottom: 16, alignItems: "center" }}>
+        <Text style={{ fontSize: 13, color: colors.mutedForeground }}>
+          Privacy policy · Version 1.0
+        </Text>
+      </View>
 
-      {/* ── Paused modal ── */}
-      <AppModal
-        visible={pausedModal}
-        icon={<Pause size={22} color={colors.primary} />}
-        iconBg={colors.background}
-        title="Paused"
-        content="Medium · 0:41 left · 3 of 8 pairs"
-        buttons={[
-          {
-            label: "Resume",
-            variant: "primary",
-            onPress: () => {
-              console.log("[Modal] Resume");
-              setPausedModal(false);
-            },
-          },
-          {
-            label: "Restart level",
-            onPress: () => {
-              console.log("[Modal] Restart level");
-              setPausedModal(false);
-            },
-          },
-          {
-            label: "Quit to home",
-            onPress: () => {
-              console.log("[Modal] Quit to home");
-              setPausedModal(false);
-              router.replace("/");
-            },
-          },
-        ]}
-        onRequestClose={() => setPausedModal(false)}
-      />
-
-      {/* ── Restart modal ── */}
-      <AppModal
-        visible={restartModal}
-        icon={<RefreshCw size={22} color={colors.primary} />}
-        iconBg={colors.background}
-        title="Restart this game?"
-        content="The cards will be shuffled again. Your 3 matched pairs and 14 moves will be cleared."
-        buttons={[
-          {
-            label: "Yes, restart",
-            variant: "primary",
-            onPress: () => {
-              console.log("[Modal] Yes restart");
-              setRestartModal(false);
-            },
-          },
-          {
-            label: "Keep playing",
-            onPress: () => {
-              console.log("[Modal] Keep playing");
-              setRestartModal(false);
-            },
-          },
-        ]}
-        onRequestClose={() => setRestartModal(false)}
-      />
-
-      {/* ── Reset all progress modal ── */}
+      {/* ── Reset modal ── */}
       <AppModal
         visible={resetModal}
         icon={<TriangleAlert size={22} color={colors.destructive} />}
@@ -324,9 +283,9 @@ export default function SettingScreen() {
           <ModalInfoList
             subtitle="This can't be undone. You will lose:"
             items={[
-              { label: "Stars earned", value: 14 },
-              { label: "Levels unlocked", value: 3 },
+              { label: "Stars earned", value: "All" },
               { label: "Best times and moves", value: "All" },
+              { label: "Unlocked levels", value: "All" },
             ]}
           />
         }
@@ -334,17 +293,11 @@ export default function SettingScreen() {
           {
             label: "Reset everything",
             variant: "destructive",
-            onPress: () => {
-              console.log("[Modal] Reset everything");
-              setResetModal(false);
-            },
+            onPress: handleResetAll,
           },
           {
             label: "Cancel",
-            onPress: () => {
-              console.log("[Modal] Cancel reset");
-              setResetModal(false);
-            },
+            onPress: () => setResetModal(false),
           },
         ]}
         onRequestClose={() => setResetModal(false)}

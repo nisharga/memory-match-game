@@ -3,7 +3,7 @@ import Confetti from "@/components/ui/Confetti";
 import ResultActions from "@/components/ui/ResultActions";
 import StarRating from "@/components/ui/StarRating";
 import StatBox from "@/components/ui/StatBox";
-import { useResultMusic } from "@/hooks";
+import { useHaptics, useResultMusic } from "@/hooks";
 import { clearStatus, selectGame, selectStarsEarned } from "@/redux/features/gameSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { GameStorage } from "@/services/storages";
@@ -19,8 +19,10 @@ export default function YouWinScreen() {
   const dispatch = useAppDispatch();
   const game = useAppSelector(selectGame);
   const stars = useAppSelector(selectStarsEarned);
+  const { haptic } = useHaptics();
 
   useResultMusic("win");
+  haptic("success");
 
   const timeUsed = game.totalSeconds - game.timeLeft;
   const timeLabel = `${Math.floor(timeUsed / 60)}:${String(timeUsed % 60).padStart(2, "0")}`;

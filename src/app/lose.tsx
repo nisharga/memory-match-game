@@ -3,7 +3,7 @@ import ResultActions from "@/components/ui/ResultActions";
 import StatBox from "@/components/ui/StatBox";
 import { clearStatus, selectGame, selectLoseReason } from "@/redux/features/gameSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { useResultMusic } from "@/hooks";
+import { useHaptics, useResultMusic } from "@/hooks";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
 import { Hourglass, Footprints, RefreshCw } from "lucide-react-native";
@@ -43,8 +43,10 @@ export default function LoseScreen() {
   const dispatch = useAppDispatch();
   const game = useAppSelector(selectGame);
   const loseReason = useAppSelector(selectLoseReason);
+  const { haptic } = useHaptics();
 
   useResultMusic("lose");
+  haptic("error");
 
   const isTimeUp = loseReason === "time";
 

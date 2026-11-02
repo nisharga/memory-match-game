@@ -29,7 +29,7 @@ const LEVELS: Level[] = [
     badgeColor: colors.tertiary,
     name: "Easy",
     pairs: 6,
-    seconds: 60,
+    seconds: 40,
     earnedStars: 3,
   },
   {
