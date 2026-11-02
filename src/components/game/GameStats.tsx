@@ -1,30 +1,5 @@
-import { colors } from "@/styles/colors";
-import { Text, View } from "react-native";
-
-interface StatItemProps {
-  label: string;
-  value: string | number;
-}
-
-function StatItem({ label, value }: StatItemProps) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: colors.surface,
-        borderRadius: 14,
-        borderWidth: 1,
-        borderColor: colors.border,
-        paddingVertical: 10,
-        paddingHorizontal: 10,
-        gap: 2,
-      }}
-    >
-      <Text className="stat-label">{label}</Text>
-      <Text className="stat-value">{value}</Text>
-    </View>
-  );
-}
+import { View } from "react-native";
+import StatItem from "./StatItem";
 
 interface GameStatsProps {
   timeLeft: string;

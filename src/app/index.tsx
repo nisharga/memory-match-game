@@ -1,5 +1,6 @@
 import { Button } from "@/components";
 import { Animate } from "@/components/common";
+import { StatItem } from "@/components/game";
 import IconButton from "@/components/ui/IconButton";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
@@ -72,43 +73,16 @@ export default function HomeScreen() {
         </Animate>
       </View>
 
+      <Animate type="fade-up" duration={500} delay={220} distance={30}>
+        <View style={{ flexDirection: "row", gap: 14, paddingHorizontal: 24, paddingBottom: 14 }}>
+          <StatItem label="Best Time" value={"99.99"} />
+          <StatItem label="Fewest Moves" value={"99.99"} />
+        </View>
+      </Animate>
+
       {/* Stats + Buttons */}
       <View style={{ paddingHorizontal: 24, paddingBottom: 36, gap: 14 }}>
         {/* Stats row */}
-        <Animate type="fade-up" duration={500} delay={220} distance={30}>
-          <View style={{ flexDirection: "row", gap: 12 }}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: colors.surface,
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: colors.border,
-                padding: 16,
-                gap: 4,
-              }}
-            >
-              <Text className="stat-label">Best Time</Text>
-              <Text className="stat-value">{stats.bestTime}</Text>
-            </View>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: colors.surface,
-                borderRadius: 16,
-                borderWidth: 1,
-                borderColor: colors.border,
-                padding: 16,
-                gap: 4,
-              }}
-            >
-              <Text className="stat-label">Fewest Moves</Text>
-              <Text className="stat-value">{stats.fewestMoves}</Text>
-            </View>
-          </View>
-
-          {/* <StatItem label="TIME LEFT" value={timeLeft} /> */}
-        </Animate>
 
         {/* Play */}
         <Animate type="fade-up" duration={500} delay={300} distance={30}>
