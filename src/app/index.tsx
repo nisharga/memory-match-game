@@ -72,8 +72,8 @@ export default function HomeScreen() {
 
       <Animate type="fade-up" duration={500} delay={220} distance={30}>
         <View style={{ flexDirection: "row", gap: 14, paddingHorizontal: 24, paddingBottom: 14 }}>
-          <StatItem label="Best Time" value={"99.99"} />
-          <StatItem label="Fewest Moves" value={"99.99"} />
+          <StatItem label="Best Time" value={"99.99"} tag="Easy" />
+          <StatItem label="Fewest Moves" value={"99.99"} tag="Easy" />
         </View>
       </Animate>
 

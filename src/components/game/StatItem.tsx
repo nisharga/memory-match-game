@@ -4,9 +4,10 @@ import { Text, View } from "react-native";
 interface StatItemProps {
   label: string;
   value: string | number;
+  tag?: string;
 }
 
-function StatItem({ label, value }: StatItemProps) {
+function StatItem({ label, value, tag }: StatItemProps) {
   return (
     <View
       style={{
@@ -21,6 +22,11 @@ function StatItem({ label, value }: StatItemProps) {
     >
       <Text className="stat-label">{label}</Text>
       <Text className="stat-value">{value}</Text>
+      {tag && (
+        <View className="absolute -top-3 right-3 rounded-full bg-primary px-2 py-1">
+          <Text className="text-xs text-black!">{tag}</Text>
+        </View>
+      )}
     </View>
   );
 }
