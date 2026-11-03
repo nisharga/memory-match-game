@@ -22,7 +22,10 @@ export default function YouWinScreen() {
   const { haptic } = useHaptics();
 
   useResultMusic("win");
-  haptic("success");
+
+  useEffect(() => {
+    haptic("success");
+  }, []);
 
   const timeUsed = game.totalSeconds - game.timeLeft;
   const timeLabel = `${Math.floor(timeUsed / 60)}:${String(timeUsed % 60).padStart(2, "0")}`;
@@ -81,55 +84,58 @@ export default function YouWinScreen() {
           </View>
         </Animate>
 
-        {/* New record badges */}
-        {(isNewBestTime || isNewBestMoves) && (
-          <Animate type="zoom-in" duration={360} delay={640}>
-            <View
-              style={{ flexDirection: "row", gap: 10, justifyContent: "center", flexWrap: "wrap" }}
-            >
-              {isNewBestTime && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 6,
-                    backgroundColor: colors.warningBg,
-                    borderRadius: 50,
-                    borderWidth: 1,
-                    borderColor: colors.warning,
-                    paddingVertical: 8,
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  <Trophy size={14} color={colors.warning} strokeWidth={2} />
-                  <Text style={{ color: colors.warning, fontSize: 13, fontWeight: "700" }}>
-                    New best time!
-                  </Text>
-                </View>
-              )}
-              {isNewBestMoves && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 6,
-                    backgroundColor: colors.warningBg,
-                    borderRadius: 50,
-                    borderWidth: 1,
-                    borderColor: colors.warning,
-                    paddingVertical: 8,
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  <Medal size={14} color={colors.warning} strokeWidth={2} />
-                  <Text style={{ color: colors.warning, fontSize: 13, fontWeight: "700" }}>
-                    Fewest moves!
-                  </Text>
-                </View>
-              )}
-            </View>
-          </Animate>
-        )}
+        {/* New record badges — always mounted so no view is inserted mid-frame */}
+        <Animate
+          type="zoom-in"
+          duration={360}
+          delay={640}
+          style={{ opacity: isNewBestTime || isNewBestMoves ? 1 : 0 }}
+        >
+          <View
+            style={{ flexDirection: "row", gap: 10, justifyContent: "center", flexWrap: "wrap" }}
+          >
+            {isNewBestTime && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 6,
+                  backgroundColor: colors.warningBg,
+                  borderRadius: 50,
+                  borderWidth: 1,
+                  borderColor: colors.warning,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                }}
+              >
+                <Trophy size={14} color={colors.warning} strokeWidth={2} />
+                <Text style={{ color: colors.warning, fontSize: 13, fontWeight: "700" }}>
+                  New best time!
+                </Text>
+              </View>
+            )}
+            {isNewBestMoves && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: 6,
+                  backgroundColor: colors.warningBg,
+                  borderRadius: 50,
+                  borderWidth: 1,
+                  borderColor: colors.warning,
+                  paddingVertical: 8,
+                  paddingHorizontal: 16,
+                }}
+              >
+                <Medal size={14} color={colors.warning} strokeWidth={2} />
+                <Text style={{ color: colors.warning, fontSize: 13, fontWeight: "700" }}>
+                  Fewest moves!
+                </Text>
+              </View>
+            )}
+          </View>
+        </Animate>
 
         {/* Hint */}
         <Animate type="fade" duration={340} delay={720}>

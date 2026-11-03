@@ -73,9 +73,15 @@ export default function GameScreen() {
   }, [status]);
 
   // ── Navigate when game ends ──────────────────────────────────────────────
+  // Delay lets the final card-flip animation finish before the screen transition
+  // starts — avoids a Fabric "addViewAt" crash from overlapping view operations.
   useEffect(() => {
-    if (status === "won") router.replace("/you-win");
-    if (status === "lost") router.replace("/lose");
+    if (status !== "won" && status !== "lost") return;
+    const id = setTimeout(() => {
+      if (status === "won") router.replace("/you-win");
+      else router.replace("/lose");
+    }, 400);
+    return () => clearTimeout(id);
   }, [status]);
 
   // ── Check match after two cards are flipped ──────────────────────────────

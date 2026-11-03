@@ -1,5 +1,5 @@
 import { colors } from "@/styles/colors";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import Animated, {
   cancelAnimation,
@@ -75,6 +75,15 @@ function Piece({ color, x, w, h, dur, delay, rotDur }: (typeof PIECES)[number]) 
 }
 
 export default function Confetti() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setReady(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
+
+  if (!ready) return null;
+
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
       {PIECES.map((p, i) => (

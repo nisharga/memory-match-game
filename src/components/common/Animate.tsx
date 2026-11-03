@@ -101,6 +101,11 @@ export default function Animate({
   const reduceMotion = useReducedMotion();
   const start: StartValues = ANIMATIONS[type];
 
+  // Only flip-* animations need 3D transforms. Keeping perspective/rotateX/rotateY
+  // on every Animated.View forces a hardware compositing layer on Android (Fabric),
+  // which crashes when many views mount simultaneously on the win/lose screens.
+  const needs3D = start.rotateX !== undefined || start.rotateY !== undefined;
+
   // 0 = start position, 1 = finished
   const progress = useSharedValue(reduceMotion ? 1 : 0);
 
@@ -115,24 +120,34 @@ export default function Animate({
 
   const animatedStyle = useAnimatedStyle(() => {
     const p = progress.value;
-    // Move from the start value to the end value as p goes 0 → 1
     const mix = (from: number, to: number) => from + (to - from) * p;
+
+    if (needs3D) {
+      return {
+        opacity: mix(start.opacity ?? 1, 1),
+        transform: [
+          { perspective: 2500 },
+          { translateX: mix((start.x ?? 0) * distance, 0) },
+          { translateY: mix((start.y ?? 0) * distance, 0) },
+          { scale: mix(start.scale ?? 1, 1) },
+          { rotateX: `${mix(start.rotateX ?? 0, 0)}deg` },
+          { rotateY: `${mix(start.rotateY ?? 0, 0)}deg` },
+        ],
+      };
+    }
 
     return {
       opacity: mix(start.opacity ?? 1, 1),
       transform: [
-        { perspective: 2500 },
         { translateX: mix((start.x ?? 0) * distance, 0) },
         { translateY: mix((start.y ?? 0) * distance, 0) },
         { scale: mix(start.scale ?? 1, 1) },
-        { rotateX: `${mix(start.rotateX ?? 0, 0)}deg` },
-        { rotateY: `${mix(start.rotateY ?? 0, 0)}deg` },
       ],
     };
   });
 
   return (
-    <Animated.View style={[{ backfaceVisibility: "hidden" }, style, animatedStyle]} {...rest}>
+    <Animated.View style={[style, animatedStyle]} {...rest}>
       {children}
     </Animated.View>
   );

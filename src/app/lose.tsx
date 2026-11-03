@@ -7,6 +7,7 @@ import { useHaptics, useResultMusic } from "@/hooks";
 import { colors } from "@/styles/colors";
 import { useRouter } from "expo-router";
 import { Hourglass, Footprints, RefreshCw } from "lucide-react-native";
+import { useEffect } from "react";
 import { Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -46,7 +47,10 @@ export default function LoseScreen() {
   const { haptic } = useHaptics();
 
   useResultMusic("lose");
-  haptic("error");
+
+  useEffect(() => {
+    haptic("error");
+  }, []);
 
   const isTimeUp = loseReason === "time";
 
