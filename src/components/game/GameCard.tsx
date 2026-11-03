@@ -1,5 +1,13 @@
 import { colors } from "@/styles/colors";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
+import Animated, {
+  cancelAnimation,
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import Svg, { Circle, Polygon, Rect } from "react-native-svg";
 import { Animate } from "../common";
 
@@ -48,8 +56,39 @@ export default function GameCard({
   cardHeight,
   onPress,
 }: GameCardProps) {
-  const isHidden = state === "hidden";
-  const isMatched = state === "matched";
+  // `face` drives visuals — updated at the midpoint of the flip (scaleX = 0)
+  // so the content swap is invisible to the user.
+  const [face, setFace] = useState<CardState>(state);
+  const scaleX = useSharedValue(1);
+  const mounted = useRef(false);
+
+  useEffect(() => {
+    // Skip the initial mount — no flip needed on first render.
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+
+    // All transitions use the same scaleX flip so setState is always called
+    // from a runOnJS callback, never synchronously inside the effect body.
+    // matched gets a snappier 100ms half-duration; hidden ↔ flipped uses 150ms.
+    const half = state === "matched" ? 100 : 150;
+
+    cancelAnimation(scaleX);
+    scaleX.value = withTiming(0, { duration: half }, (finished) => {
+      if (finished) {
+        runOnJS(setFace)(state);
+        scaleX.value = withTiming(1, { duration: half });
+      }
+    });
+  }, [state, scaleX]);
+
+  const flipStyle = useAnimatedStyle(() => ({
+    transform: [{ scaleX: scaleX.value }],
+  }));
+
+  const isHidden = face === "hidden";
+  const isMatched = face === "matched";
 
   const bgColor = isHidden ? colors.cardBack : isMatched ? colors.cardMatched : colors.cardFace;
   const borderColor = isHidden
@@ -67,20 +106,29 @@ export default function GameCard({
         style={({ pressed }) => ({
           width: cardWidth,
           height: cardHeight,
-          borderRadius: 16,
-          backgroundColor: bgColor,
-          borderWidth: 2,
-          borderColor,
-          alignItems: "center",
-          justifyContent: "center",
           opacity: pressed && !isMatched ? 0.85 : 1,
         })}
       >
-        {!isHidden && (
-          <View style={{ opacity: isMatched ? 0.75 : 1 }}>
-            <Shape type={shape} color={shapeColor} size={shapeSize} />
-          </View>
-        )}
+        <Animated.View
+          style={[
+            {
+              flex: 1,
+              borderRadius: 16,
+              backgroundColor: bgColor,
+              borderWidth: 2,
+              borderColor,
+              alignItems: "center",
+              justifyContent: "center",
+            },
+            flipStyle,
+          ]}
+        >
+          {!isHidden && (
+            <View style={{ opacity: isMatched ? 0.75 : 1 }}>
+              <Shape type={shape} color={shapeColor} size={shapeSize} />
+            </View>
+          )}
+        </Animated.View>
       </Pressable>
     </Animate>
   );
