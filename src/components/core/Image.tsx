@@ -30,7 +30,7 @@ export default function Image({ src, fallback = FALLBACK, className, style, ...r
         { aspectRatio: ratio ?? 16 / 9, backgroundColor: ratio ? undefined : "#e5e7eb" },
         style,
       ]}
-      onLoad={(e) => setRatio(e.source.width / e.source.height)}
+      onLoad={(e: any) => setRatio(e.source.width / e.source.height)}
       onError={() => setError(true)}
     />
   );

@@ -1,7 +1,6 @@
 export { default as CustomModal } from "./CustomModal";
 export { default as AppModal, ModalInfoList } from "./AppModal";
 export type { AppModalProps, ModalButton, ModalButtonVariant } from "./AppModal";
-export { default as WebUrl } from "./WebUrl";
 export { default as ScreenHeader } from "./ScreenHeader";
 export { default as Additionalbutton } from "./Additionalbutton";
 export { default as Carousel } from "./Carousel";

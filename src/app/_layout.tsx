@@ -3,12 +3,8 @@ import { LanguageProvider } from "@/context/LanguageContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { store } from "@/redux/store";
 import { Provider } from "react-redux";
-import AppToast from "@/components/ui/AppToast";
-import { toastRef } from "@/utils/toast";
 import { CustomSplashScreen, OnboardingScreen } from "@/features/onboarding";
 import { ErrorBoundary, initSentry } from "@/components/error-handling";
-import { OverlayProvider } from "@gluestack-ui/core/overlay/creator";
-import { ToastProvider } from "@gluestack-ui/core/toast/creator";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -70,22 +66,17 @@ function RootLayout() {
     <ErrorBoundary>
       <Provider store={store}>
         <GestureHandlerRootView className="flex-1 bg-background">
-          <OverlayProvider>
-            <ToastProvider>
-              <ThemeProvider>
-                <LanguageProvider>
-                  <StatusBar style="auto" />
-                  <Stack
-                    screenOptions={{
-                      headerShown: false,
-                      contentStyle: { backgroundColor: "transparent" },
-                    }}
-                  />
-                  <AppToast ref={toastRef} />
-                </LanguageProvider>
-              </ThemeProvider>
-            </ToastProvider>
-          </OverlayProvider>
+          <ThemeProvider>
+            <LanguageProvider>
+              <StatusBar style="auto" />
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: "transparent" },
+                }}
+              />
+            </LanguageProvider>
+          </ThemeProvider>
         </GestureHandlerRootView>
       </Provider>
     </ErrorBoundary>
