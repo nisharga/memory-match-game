@@ -131,6 +131,7 @@ export default function GameScreen() {
         <GameStats
           timeLeft={timeLabel}
           moves={game.moves}
+          maxMoves={game.maxMoves}
           pairsFound={game.pairsFound}
           totalPairs={game.totalPairs}
         />
